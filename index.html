@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class XII Study Dashboard | Session 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* =========================================================
+           CSS VARIABLES & THEME SETUP
+           ========================================================= */
+        :root {
+            /* Core Theme */
+            --bg-color: #0B1120;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A0AEC0;
+            
+            /* Gradients & Accents */
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --gradient-primary: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            
+            /* Subject Colors */
+            --subj-physics: #3b82f6;      /* Blue */
+            --subj-chemistry: #10b981;    /* Green */
+            --subj-biology: #059669;      /* Emerald */
+            --subj-cs: #a855f7;           /* Purple */
+            --subj-psychology: #f97316;   /* Orange */
+            --subj-english: #6b7280;      /* Gray */
+
+            /* Glassmorphism */
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            
+            /* Radius & Transitions */
+            --radius-lg: 24px;
+            --radius-md: 18px;
+            --radius-sm: 12px;
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        /* =========================================================
+           RESET & BASE STYLES
+           ========================================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-purple);
+        }
+
+        /* =========================================================
+           AURORA BACKGROUND ANIMATION
+           ========================================================= */
+        .aurora-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background: var(--bg-color);
+        }
+
+        .blob {
+            position: absolute;
+            filter: blur(100px);
+            opacity: 0.5;
+            animation: float 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .blob-1 {
+            background: var(--accent-blue);
+            width: 40vw; height: 40vw;
+            top: -10%; left: -10%;
+            border-radius: 50%;
+        }
+
+        .blob-2 {
+            background: var(--accent-purple);
+            width: 35vw; height: 35vw;
+            bottom: -10%; right: -10%;
+            border-radius: 50%;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(10%, 20%) scale(1.1); }
+            100% { transform: translate(-10%, 10%) scale(0.9); }
+        }
+
+        /* =========================================================
+           LAYOUT & NAVIGATION
+           ========================================================= */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            background: rgba(11, 17, 32, 0.7);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand h1 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .today-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* =========================================================
+           HERO & DASHBOARD CARDS (STATS)
+           ========================================================= */
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero-title h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-title p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .subject-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .badge {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition-smooth);
+        }
+        
+        .badge:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Grid for Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            backdrop-filter: blur(16px);
+            box-shadow: var(--glass-shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-title {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .stat-card.highlight {
+            background: linear-gradient(145deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        /* Circular Progress in Stat Card */
+        .progress-ring-container {
+            position: absolute;
+            right: -20px;
+            bottom: -20px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(var(--accent-purple) 0%, transparent 0%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.2;
+            transition: var(--transition-smooth);
+        }
+
+        .progress-ring-inner {
+            width: 80px;
+            height: 80px;
+            background: var(--bg-color);
+            border-radius: 50%;
+        }
+
+        /* =========================================================
+           FILTERS & SEARCH
+           ========================================================= */
+        .controls-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border-radius: var(--radius-sm);
+            outline: none;
+            transition: var(--transition-smooth);
+            font-family: inherit;
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent-purple);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.5;
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-size: 0.85rem;
+        }
+
+        .filter-chip:hover, .filter-chip.active {
+            background: white;
+            color: var(--bg-color);
+            border-color: white;
+            font-weight: 600;
+        }
+
+        /* =========================================================
+           TIMELINE & EXAM CARDS
+           ========================================================= */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            position: relative;
+        }
+
+        /* Vertical Line for timeline */
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--glass-border);
+            z-index: 0;
+        }
+
+        .exam-card-wrapper {
+            display: flex;
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.6s forwards;
+        }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .timeline-date-marker {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            border: 2px solid var(--accent-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: 700;
+            font-size: 0.8rem;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+            z-index: 2;
+        }
+
+        .exam-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            width: 100%;
+            box-shadow: var(--glass-shadow);
+            transition: var(--transition-smooth);
+            overflow: hidden;
+        }
+
+        .exam-card.completed {
+            opacity: 0.6;
+            filter: grayscale(0.5);
+        }
+
+        .exam-header {
+            padding: 1.5rem 2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid transparent;
+            transition: var(--transition-smooth);
+        }
+        
+        .exam-header:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .exam-info h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .exam-marks {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+        }
+
+        .exam-subjects-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .subj-tag {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .exam-progress-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+        }
+
+        .expand-icon {
+            transition: transform 0.3s ease;
+            opacity: 0.6;
+        }
+
+        .exam-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .exam-card.expanded .exam-header {
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(0,0,0,0.2);
+        }
+
+        .exam-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .exam-card.expanded .exam-body {
+            max-height: 5000px; /* Arbitrary large number for CSS transition */
+            transition: max-height 0.8s ease-in-out;
+        }
+
+        .syllabus-grid {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .subject-block h4 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 0.5rem;
+        }
+
+        .subject-block h4::before {
+            content: '';
+            display: block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--current-color, white);
+        }
+
+        .category-title {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 1rem 0 0.5rem 0;
+            font-weight: 600;
+        }
+
+        /* Checkboxes */
+        .topic-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            margin-bottom: 0.6rem;
+            cursor: pointer;
+            group: topic;
+        }
+
+        .topic-item input[type="checkbox"] {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--glass-border);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            margin-top: 2px;
+            transition: var(--transition-smooth);
+        }
+
+        .topic-item input[type="checkbox"]:checked {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+
+        .topic-item input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            left: 4px;
+            top: -1px;
+            font-weight: bold;
+        }
+
+        .topic-label {
+            font-size: 0.95rem;
+            color: #e2e8f0;
+            transition: var(--transition-smooth);
+            line-height: 1.4;
+        }
+
+        .topic-item input[type="checkbox"]:checked + .topic-label {
+            color: var(--text-secondary);
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .topic-item:hover .topic-label {
+            color: white;
+        }
+
+        /* =========================================================
+           BACK TO TOP BUTTON
+           ========================================================= */
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: var(--glass-shadow);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition-smooth);
+            z-index: 99;
+        }
+
+        #backToTop.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        #backToTop:hover {
+            background: var(--accent-purple);
+        }
+
+        /* =========================================================
+           RESPONSIVE DESIGN
+           ========================================================= */
+        @media (max-width: 768px) {
+            .hero-title h2 { font-size: 2.2rem; }
+            .exam-card-wrapper { flex-direction: column; gap: 1rem; }
+            .timeline::before { left: 21px; top: 40px; }
+            .exam-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .exam-progress-wrapper { width: 100%; justify-content: space-between; }
+            .controls-section { flex-direction: column; align-items: stretch; }
+            .search-box { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="aurora-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-content">
+            <div class="brand">
+                <h1>Dashboard XII</h1>
+            </div>
+            <div class="today-date" id="currentDateDisplay">Loading...</div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <header class="hero-section">
+            <div class="hero-title">
+                <h2>Class XII Study Dashboard</h2>
+                <p>Session 2026 • Target Excellence</p>
+                <div class="subject-badges">
+                    <span class="badge">🧲 Physics</span>
+                    <span class="badge">🧪 Chemistry</span>
+                    <span class="badge">🧬 Biology</span>
+                    <span class="badge">💻 Computer Science</span>
+                    <span class="badge">🧠 Psychology</span>
+                    <span class="badge">📖 English</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card highlight">
+                <div class="stat-title">Next Exam</div>
+                <div class="stat-value" id="nextExamName">PT-02</div>
+                <div style="color: var(--accent-blue); margin-top: 5px; font-weight: 600;" id="nextExamDate">20 July 2026</div>
+                <div style="font-size: 0.9rem; color: var(--text-secondary); margin-top: auto; padding-top: 10px;" id="nextExamCountdown">6 Days Remaining</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-title">Overall Progress</div>
+                <div class="stat-value" id="overallProgressTxt">0%</div>
+                <div style="font-size: 0.9rem; color: var(--text-secondary); margin-top: auto; padding-top: 10px;">Of total syllabus</div>
+                <div class="progress-ring-container" id="overallProgressRing">
+                    <div class="progress-ring-inner"></div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-title">Topics Completed</div>
+                <div class="stat-value"><span id="topicsCompleted">0</span><span style="font-size: 1rem; color: var(--text-secondary);"> / <span id="topicsTotal">0</span></span></div>
+                <div style="font-size: 0.9rem; color: var(--text-secondary); margin-top: auto; padding-top: 10px;">Mastered concepts</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-title">Total Exams</div>
+                <div class="stat-value" id="totalExamsCount">7</div>
+                <div style="font-size: 0.9rem; color: var(--text-secondary); margin-top: auto; padding-top: 10px;">Scheduled for Term</div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <section class="controls-section">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Search syllabus, exams, topics...">
+            </div>
+            <div class="filter-chips" id="filterContainer">
+                <button class="filter-chip active" data-filter="all">All Subjects</button>
+                <button class="filter-chip" data-filter="Physics">Physics</button>
+                <button class="filter-chip" data-filter="Chemistry">Chemistry</button>
+                <button class="filter-chip" data-filter="Biology">Biology</button>
+                <button class="filter-chip" data-filter="Computer Science">Computer Science</button>
+                <button class="filter-chip" data-filter="Psychology">Psychology</button>
+                <button class="filter-chip" data-filter="English">English</button>
+            </div>
+        </section>
+
+        <!-- Timeline -->
+        <main class="timeline" id="timelineContainer">
+            <!-- Populated via JavaScript -->
+        </main>
+    </div>
+
+    <!-- Back to Top -->
+    <button id="backToTop">↑</button>
+
+    <script>
+        /* =========================================================
+           DATA CONFIGURATION (Exactly as requested)
+           ========================================================= */
+        const subjectColors = {
+            "Physics": "var(--subj-physics)",
+            "Chemistry": "var(--subj-chemistry)",
+            "Biology": "var(--subj-biology)",
+            "Computer Science": "var(--subj-cs)",
+            "Psychology": "var(--subj-psychology)",
+            "English": "var(--subj-english)"
+        };
+
+        const examsData = [
+            {
+                id: "pt-02",
+                name: "PT-02",
+                date: "20 July 2026",
+                parsedDate: new Date("July 20, 2026 00:00:00"),
+                marks: "40 / 35",
+                subjects: [
+                    {
+                        name: "Biology",
+                        categories: [
+                            { name: "PROBABLES", topics: ["Molecular Basis of Inheritance", "Microbes in Human Welfare", "Human Reproduction"] },
+                            { name: "N-SURE", topics: ["Microbes in Human Welfare", "Evolution (HW excluded)", "Molecular Basis of Inheritance", "DNA Structure", "Griffith Experiment", "DNA as Genetic Material", "RNA", "DNA Replication", "Genetic Code", "DNA Fingerprinting only"] }
+                        ]
+                    },
+                    {
+                        name: "Computer Science",
+                        categories: [
+                            { name: "PROBABLES", topics: ["File Handling (CSV)", "Data Structures", "Communication & Networking (Till Network Topologies)", "Database Management System", "Python + MySQL", "File Handling (Binary Files)"] },
+                            { name: "N-SURE", topics: ["File Handling (CSV)", "Data Structures", "Communication & Networking", "Database Management System", "Python + MySQL", "File Handling (Binary Files)"] }
+                        ]
+                    },
+                    {
+                        name: "Psychology",
+                        categories: [
+                            { name: "Syllabus", topics: ["Unit 3", "Unit 4", "PT-1 Syllabus Revision"] }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "cdf-07",
+                name: "CDF-07",
+                date: "24 July 2026",
+                parsedDate: new Date("July 24, 2026 00:00:00"),
+                marks: "30",
+                subjects: [
+                    {
+                        name: "Physics",
+                        categories: [
+                            { name: "Ray Optics", topics: ["Lens Maker Formula", "Magnification", "Power", "Combination of Lenses", "Prism", "Microscopes", "Telescopes"] },
+                            { name: "Previous Week", topics: ["Reflection", "Refraction", "TIR", "Optical Fibre", "Mirror Formula", "Thin Lens Formula"] }
+                        ]
+                    },
+                    {
+                        name: "Chemistry",
+                        categories: [
+                            { name: "Carbohydrates", topics: ["Glucose", "Fructose", "Sucrose", "Lactose", "Maltose", "Starch", "Cellulose", "Glycogen"] },
+                            { name: "Amines", topics: ["Amines"] }
+                        ]
+                    },
+                    {
+                        name: "Biology",
+                        categories: [
+                            { name: "Syllabus", topics: ["Ecosystem", "Productivity", "Population Growth", "Population Interaction", "Numericals"] }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "cdf-08",
+                name: "CDF-08",
+                date: "31 July 2026",
+                parsedDate: new Date("July 31, 2026 00:00:00"),
+                marks: "30",
+                subjects: [
+                    {
+                        name: "Physics",
+                        categories: [
+                            { name: "Syllabus", topics: ["Wave Optics", "Ray Optics Revision"] }
+                        ]
+                    },
+                    {
+                        name: "Chemistry",
+                        categories: [
+                            { name: "Syllabus", topics: ["Amines", "Diazonium Salts"] }
+                        ]
+                    },
+                    {
+                        name: "Biology",
+                        categories: [
+                            { name: "Syllabus", topics: ["Species Area Relationship", "Biotechnology", "Recombinant DNA", "Cloning Vector", "Competent Host"] }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "pt-03-aug3",
+                name: "PT-03",
+                date: "3 August 2026",
+                parsedDate: new Date("August 3, 2026 00:00:00"),
+                marks: "35",
+                subjects: [
+                    {
+                        name: "Physics",
+                        categories: [
+                            { name: "PROBABLES", topics: ["Electric Charges", "Electrostatics", "Current Electricity", "Magnetism", "EMI", "AC", "EM Waves", "Wave Optics"] },
+                            { name: "N-SURE", topics: ["Capacitance", "Current Electricity", "Magnetism", "EMI", "EM Waves", "Wave Optics"] }
+                        ]
+                    },
+                    {
+                        name: "Chemistry",
+                        categories: [
+                            { name: "PROBABLES", topics: ["Solutions", "Electrochemistry", "Chemical Kinetics", "Haloalkanes", "Alcohols", "Aldehydes", "Biomolecules"] },
+                            { name: "N-SURE", topics: ["Solutions", "Chemical Kinetics", "Haloalkanes", "Biomolecules", "Electrochemistry"] }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "cdf-09",
+                name: "CDF-09",
+                date: "7 August 2026",
+                parsedDate: new Date("August 7, 2026 00:00:00"),
+                marks: "30",
+                subjects: [
+                    {
+                        name: "Physics",
+                        categories: [
+                            { name: "Syllabus", topics: ["Dual Nature", "Wave Optics Revision"] }
+                        ]
+                    },
+                    {
+                        name: "Chemistry",
+                        categories: [
+                            { name: "Syllabus", topics: ["d Block", "f Block", "Lanthanides", "Actinides", "KMnO4", "K2Cr2O7"] }
+                        ]
+                    },
+                    {
+                        name: "Biology",
+                        categories: [
+                            { name: "Syllabus", topics: ["rDNA Technology", "Isolation", "Amplification", "Gene Product"] }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "eng-pt",
+                name: "English PT",
+                date: "10 August 2026",
+                parsedDate: new Date("August 10, 2026 00:00:00"),
+                marks: "20",
+                subjects: [
+                    {
+                        name: "English",
+                        categories: [
+                            { name: "Reading", topics: ["Reading Comprehension"] },
+                            { name: "Writing", topics: ["Notice", "Invitations", "Job Application", "Letter to Editor", "Article", "Report"] },
+                            { name: "Flamingo", topics: ["The Last Lesson", "Lost Spring", "Deep Water", "Indigo", "Poets and Pancakes"] },
+                            { name: "Vistas", topics: ["Third Level", "Tiger King", "Journey to the End of the Earth", "The Enemy"] },
+                            { name: "Poems", topics: ["My Mother at Sixty Six", "Keeping Quiet", "Roadside Stand", "Aunt Jennifer's Tigers", "A Thing of Beauty"] }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "pt-03-aug17",
+                name: "PT-03",
+                date: "17 August 2026",
+                parsedDate: new Date("August 17, 2026 00:00:00"),
+                marks: "40 / 35",
+                subjects: [
+                    {
+                        name: "Biology",
+                        categories: [
+                            { name: "PROBABLES", topics: ["Human Health & Disease", "Evolution", "Sexual Reproduction", "Human Reproduction", "Principles of Inheritance", "Molecular Basis", "Organisms & Population", "Biodiversity"] },
+                            { name: "N-SURE", topics: ["Human Health", "Organisms & Population", "Biodiversity", "Microbes", "Evolution", "Principles of Inheritance", "Molecular Basis"] }
+                        ]
+                    },
+                    {
+                        name: "Computer Science",
+                        categories: [
+                            { name: "PROBABLES", topics: ["Python Revision II", "Functions", "File Handling", "SQL", "Networking"] },
+                            { name: "N-SURE", topics: ["Python Revision I", "Python Revision II", "Functions", "SQL", "Networking"] }
+                        ]
+                    },
+                    {
+                        name: "Psychology",
+                        categories: [
+                            { name: "Syllabus", topics: ["Full Revision", "Units 1–6"] }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        /* =========================================================
+           STATE & LOGIC
+           ========================================================= */
+        
+        let checkedTopics = JSON.parse(localStorage.getItem('xii_dashboard_progress')) || [];
+        let totalCheckboxes = 0;
+
+        // Initialize App
+        function init() {
+            renderDate();
+            renderTimeline();
+            updateCountdown();
+            setInterval(updateCountdown, 1000 * 60 * 60); // Update countdown every hour
+            setupEventListeners();
+            updateProgress();
+        }
+
+        function renderDate() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDateDisplay').textContent = new Date().toLocaleDateString('en-US', options);
+        }
+
+        function generateTopicId(examId, subjectName, categoryName, topicName) {
+            // Create a safe, unique string for local storage
+            const rawId = `${examId}_${subjectName}_${categoryName}_${topicName}`;
+            return rawId.toLowerCase().replace(/[^a-z0-9]/g, '_');
+        }
+
+        function renderTimeline() {
+            const container = document.getElementById('timelineContainer');
+            container.innerHTML = '';
+            totalCheckboxes = 0;
+
+            examsData.forEach((exam, index) => {
+                // Determine tags
+                const subjectTagsHTML = exam.subjects.map(sub => 
+                    `<span class="subj-tag" style="background: ${subjectColors[sub.name]}20; color: ${subjectColors[sub.name]}; border: 1px solid ${subjectColors[sub.name]}50;">${sub.name}</span>`
+                ).join('');
+
+                // Calculate local progress for this exam
+                let examTotal = 0;
+                let examChecked = 0;
+
+                // Generate Syllabus HTML
+                let syllabusHTML = '';
+                exam.subjects.forEach(subject => {
+                    let subjectBlocks = '';
+                    subject.categories.forEach(cat => {
+                        let topicsHTML = '';
+                        cat.topics.forEach(topic => {
+                            totalCheckboxes++;
+                            examTotal++;
+                            const topicId = generateTopicId(exam.id, subject.name, cat.name, topic);
+                            const isChecked = checkedTopics.includes(topicId) ? 'checked' : '';
+                            if(isChecked) examChecked++;
+
+                            topicsHTML += `
+                                <label class="topic-item">
+                                    <input type="checkbox" data-exam="${exam.id}" id="${topicId}" ${isChecked}>
+                                    <span class="topic-label">${topic}</span>
+                                </label>
+                            `;
+                        });
+                        
+                        const catTitle = cat.name === 'Syllabus' ? '' : `<div class="category-title">${cat.name}</div>`;
+                        
+                        subjectBlocks += `
+                            <div>
+                                ${catTitle}
+                                ${topicsHTML}
+                            </div>
+                        `;
+                    });
+
+                    syllabusHTML += `
+                        <div class="subject-block" style="--current-color: ${subjectColors[subject.name]}">
+                            <h4 style="color: ${subjectColors[subject.name]}">${subject.name}</h4>
+                            ${subjectBlocks}
+                        </div>
+                    `;
+                });
+
+                const progressPercent = examTotal > 0 ? Math.round((examChecked / examTotal) * 100) : 0;
+                const dateSplit = exam.date.split(' ');
+                const dayMarker = dateSplit[0];
+
+                const cardHTML = `
+                    <div class="exam-card-wrapper" data-exam="${exam.id}" data-subjects="${exam.subjects.map(s => s.name).join(',')}">
+                        <div class="timeline-date-marker">${dayMarker}</div>
+                        <article class="exam-card" id="card-${exam.id}">
+                            <div class="exam-header">
+                                <div>
+                                    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.3rem;">${exam.date}</div>
+                                    <div class="exam-info">
+                                        <h3>${exam.name} <span class="exam-marks">${exam.marks} Marks</span></h3>
+                                    </div>
+                                    <div class="exam-subjects-tags">${subjectTagsHTML}</div>
+                                </div>
+                                <div class="exam-progress-wrapper">
+                                    <div class="progress-text"><span id="prog-txt-${exam.id}">${progressPercent}</span>%</div>
+                                    <svg class="expand-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </div>
+                            </div>
+                            <div class="exam-body">
+                                <div class="syllabus-grid">
+                                    ${syllabusHTML}
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', cardHTML);
+            });
+
+            // Stagger animations
+            document.querySelectorAll('.exam-card-wrapper').forEach((el, i) => {
+                el.style.animationDelay = `${i * 0.1}s`;
+            });
+        }
+
+        function setupEventListeners() {
+            // Expand / Collapse Cards
+            document.getElementById('timelineContainer').addEventListener('click', (e) => {
+                const header = e.target.closest('.exam-header');
+                if(header && !e.target.closest('.topic-item')) {
+                    const card = header.closest('.exam-card');
+                    card.classList.toggle('expanded');
+                }
+            });
+
+            // Checkbox tracking
+            document.getElementById('timelineContainer').addEventListener('change', (e) => {
+                if(e.target.type === 'checkbox') {
+                    const id = e.target.id;
+                    if(e.target.checked) {
+                        if(!checkedTopics.includes(id)) checkedTopics.push(id);
+                    } else {
+                        checkedTopics = checkedTopics.filter(t => t !== id);
+                    }
+                    localStorage.setItem('xii_dashboard_progress', JSON.stringify(checkedTopics));
+                    updateProgress();
+                    updateIndividualExamProgress(e.target.dataset.exam);
+                }
+            });
+
+            // Filter Chips
+            document.getElementById('filterContainer').addEventListener('click', (e) => {
+                if(e.target.classList.contains('filter-chip')) {
+                    // Update active state
+                    document.querySelectorAll('.filter-chip').forEach(btn => btn.classList.remove('active'));
+                    e.target.classList.add('active');
+                    
+                    const filterValue = e.target.dataset.filter;
+                    filterExams(filterValue, document.getElementById('searchInput').value);
+                }
+            });
+
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const activeFilter = document.querySelector('.filter-chip.active').dataset.filter;
+                filterExams(activeFilter, e.target.value.toLowerCase());
+            });
+
+            // Back to top
+            const btt = document.getElementById('backToTop');
+            window.addEventListener('scroll', () => {
+                if(window.scrollY > 300) btt.classList.add('visible');
+                else btt.classList.remove('visible');
+            });
+            btt.addEventListener('click', () => window.scrollTo(0, 0));
+        }
+
+        function filterExams(subject, searchQuery) {
+            const wrappers = document.querySelectorAll('.exam-card-wrapper');
+            wrappers.forEach(wrapper => {
+                const subjectsAttr = wrapper.dataset.subjects;
+                const textContent = wrapper.innerText.toLowerCase();
+                
+                const matchesSubject = subject === 'all' || subjectsAttr.includes(subject);
+                const matchesSearch = textContent.includes(searchQuery);
+
+                if(matchesSubject && matchesSearch) {
+                    wrapper.style.display = 'flex';
+                } else {
+                    wrapper.style.display = 'none';
+                }
+            });
+        }
+
+        function updateProgress() {
+            const completedCount = checkedTopics.length;
+            const percentage = totalCheckboxes === 0 ? 0 : Math.round((completedCount / totalCheckboxes) * 100);
+            
+            // Update Text
+            document.getElementById('overallProgressTxt').textContent = `${percentage}%`;
+            document.getElementById('topicsCompleted').textContent = completedCount;
+            document.getElementById('topicsTotal').textContent = totalCheckboxes;
+
+            // Update Ring Animation
+            const ring = document.getElementById('overallProgressRing');
+            // conic gradient syntax to show progress
+            ring.style.background = `conic-gradient(var(--accent-purple) 0%, var(--accent-blue) ${percentage}%, transparent ${percentage}%)`;
+            ring.style.opacity = percentage > 0 ? "1" : "0.2";
+        }
+
+        function updateIndividualExamProgress(examId) {
+            const card = document.getElementById(`card-${examId}`);
+            const checkboxes = card.querySelectorAll('input[type="checkbox"]');
+            let checked = 0;
+            checkboxes.forEach(cb => { if(cb.checked) checked++; });
+            
+            const percent = checkboxes.length === 0 ? 0 : Math.round((checked / checkboxes.length) * 100);
+            document.getElementById(`prog-txt-${examId}`).textContent = percent;
+
+            if (percent === 100) {
+                card.style.borderColor = 'var(--accent-blue)';
+                card.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.2)';
+            } else {
+                card.style.borderColor = 'var(--glass-border)';
+                card.style.boxShadow = 'var(--glass-shadow)';
+            }
+        }
+
+        function updateCountdown() {
+            const now = new Date();
+            let nextExam = null;
+
+            // Find the next upcoming exam
+            for (let exam of examsData) {
+                // Assume exams end at 23:59 on their day. Let's just compare dates.
+                if (exam.parsedDate.getTime() + (24*60*60*1000) > now.getTime()) {
+                    nextExam = exam;
+                    break;
+                }
+            }
+
+            if (nextExam) {
+                document.getElementById('nextExamName').textContent = nextExam.name;
+                document.getElementById('nextExamDate').textContent = nextExam.date;
+                
+                const timeDiff = nextExam.parsedDate.getTime() - now.getTime();
+                const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                
+                if(daysLeft === 0) {
+                    document.getElementById('nextExamCountdown').textContent = "Exam is Today!";
+                    document.getElementById('nextExamCountdown').style.color = "var(--subj-psychology)";
+                } else if(daysLeft < 0) {
+                     document.getElementById('nextExamCountdown').textContent = "Exam Passed";
+                } else {
+                    document.getElementById('nextExamCountdown').textContent = `${daysLeft} Days Remaining`;
+                }
+            } else {
+                document.getElementById('nextExamName').textContent = "All Exams Done!";
+                document.getElementById('nextExamDate').textContent = "Term Completed";
+                document.getElementById('nextExamCountdown').textContent = "Party Time! 🎉";
+            }
+        }
+
+        // Run application
+        init();
+
+    </script>
+</body>
+</html>
