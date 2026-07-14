@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unique's Workload | Premium Dashboard</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,600;1,700&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================================
+           CORE THEME & VARIABLES
+           ========================================================= */
+        :root {
+            --bg-color: #0B1120;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A0AEC0;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --gradient-primary: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            
+            --subj-physics: #3b82f6;
+            --subj-chemistry: #10b981;
+            --subj-biology: #059669;
+            --subj-cs: #a855f7;
+            --subj-psychology: #f97316;
+            --subj-english: #6b7280;
+            --subj-math: #ec4899;
+
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            --radius-lg: 24px;
+            --radius-md: 18px;
+            --radius-sm: 12px;
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-primary); overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* Background Aurora */
+        .aurora-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; overflow: hidden; background: var(--bg-color); }
+        .blob { position: absolute; filter: blur(100px); opacity: 0.4; animation: float 20s infinite alternate ease-in-out; }
+        .blob-1 { background: var(--accent-blue); width: 40vw; height: 40vw; top: -10%; left: -10%; border-radius: 50%; }
+        .blob-2 { background: var(--accent-purple); width: 35vw; height: 35vw; bottom: -10%; right: -10%; border-radius: 50%; animation-delay: -5s; }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(10%, 10%) scale(1.1); } }
+
+        /* =========================================================
+           AUTH GATEKEEPER (LOGIN SCREEN)
+           ========================================================= */
+        #authScreen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg-color); z-index: 9999; display: flex; justify-content: center; align-items: center; transition: var(--transition-smooth); backdrop-filter: blur(20px); }
+        #authScreen.hidden { opacity: 0; pointer-events: none; }
+        
+        .auth-card { 
+            background: var(--glass-bg); 
+            border: 1px solid var(--glass-border); 
+            border-radius: var(--radius-lg); 
+            padding: 3.5rem 2.5rem; 
+            text-align: center; 
+            max-width: 450px; 
+            width: 90%; 
+            box-shadow: var(--glass-shadow); 
+            backdrop-filter: blur(16px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .auth-card h2 { 
+            font-family: 'Playfair Display', serif; 
+            font-style: italic;
+            font-size: 2.4rem;
+            font-weight: 700; 
+            margin-bottom: 0.8rem; 
+            padding: 0 5px; 
+            background: var(--gradient-primary); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.25));
+            line-height: 1.2;
+            width: 100%;
+        }
+
+        .auth-card p { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 2.5rem; line-height: 1.5; width: 100%; }
+        
+        #btnMainGoogleLogin { width: 100%; padding: 0.9rem; margin-bottom: 12px; justify-content: center; }
+        .offline-btn { background: transparent; border: none; color: var(--text-secondary); margin-top: 0.5rem; cursor: pointer; font-size: 0.85rem; text-decoration: underline; transition: 0.2s; padding: 0.5rem; }
+        .offline-btn:hover { color: white; }
+
+        /* App Container */
+        #appContainer { opacity: 0; transition: opacity 0.5s ease; pointer-events: none; flex: 1; display: flex; flex-direction: column; width: 100%; }
+        #appContainer.visible { opacity: 1; pointer-events: all; }
+
+        /* Navigation */
+        nav { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); background: rgba(11, 17, 32, 0.7); border-bottom: 1px solid var(--glass-border); padding: 1rem 0; width: 100%; }
+        .nav-content { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; padding: 0 2rem; }
+        
+        .brand h1 { 
+            font-family: 'Playfair Display', serif; 
+            font-style: italic;
+            font-size: 1.6rem; 
+            font-weight: 700; 
+            letter-spacing: 0.5px; 
+            color: white; 
+            margin: 0; 
+            background: var(--gradient-primary); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.2)); 
+        }
+        
+        .nav-actions { display: flex; align-items: center; gap: 0.8rem; }
+        
+        /* Buttons & Profile */
+        .btn { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 0.6rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: var(--transition-smooth); white-space: nowrap; }
+        .btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); transform: translateY(-1px); }
+        .btn-primary { background: var(--gradient-primary); border: none; justify-content: center; }
+        .btn-primary:hover { opacity: 0.9; box-shadow: 0 0 15px rgba(139, 92, 246, 0.4); }
+        .btn-outline { background: transparent; border: 1px solid var(--glass-border); color: var(--text-secondary); }
+        .btn-outline:hover { color: white; border-color: var(--text-secondary); }
+        
+        .user-profile-container { display: flex; align-items: center; gap: 0.8rem; }
+        .profile-pic { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--accent-purple); object-fit: cover; cursor: pointer; flex-shrink: 0; }
+        .logout-text { font-size: 0.8rem; color: #ef4444; cursor: pointer; display: none; font-weight: 600; }
+        .user-profile-container:hover .logout-text { display: block; }
+
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 2rem; flex: 1; display: flex; flex-direction: column; }
+        
+        /* Dashboard Layout Components */
+        .hero-section { margin-bottom: 2.5rem; }
+        .hero-title h2 { font-size: 2.5rem; font-weight: 700; letter-spacing: -1px; margin-bottom: 0.5rem; line-height: 1.2; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; width: 100%; }
+        .stat-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 1.5rem; backdrop-filter: blur(16px); box-shadow: var(--glass-shadow); }
+        .stat-title { color: var(--text-secondary); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-value { font-size: 1.8rem; font-weight: 700; margin-top: 0.5rem; }
+        
+        /* Timeline Elements */
+        .timeline { display: flex; flex-direction: column; gap: 2rem; position: relative; padding-bottom: 2rem; }
+        .timeline::before { content: ''; position: absolute; left: 25px; top: 0; bottom: 0; width: 2px; background: var(--glass-border); }
+        
+        /* Empty State */
+        .empty-state { text-align: center; padding: 4rem 2rem; background: var(--glass-bg); border: 1px dashed var(--glass-border); border-radius: var(--radius-lg); backdrop-filter: blur(10px); }
+        .empty-state h3 { font-size: 1.5rem; margin-bottom: 0.5rem; color: white; }
+        .empty-state p { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.5rem; }
+
+        .exam-card-wrapper { display: flex; gap: 2rem; position: relative; z-index: 1; }
+        .timeline-date-marker { width: 52px; height: 52px; border-radius: 50%; background: var(--bg-color); border: 2px solid var(--accent-blue); display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); z-index: 2; line-height: 1; }
+        
+        .exam-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); backdrop-filter: blur(20px); width: 100%; overflow: hidden; box-shadow: var(--glass-shadow); transition: var(--transition-smooth); }
+        .exam-header { padding: 1.5rem 2rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .exam-header:hover { background: rgba(255,255,255,0.02); }
+        .exam-info h3 { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+        .exam-marks { font-size: 0.8rem; color: var(--text-secondary); background: rgba(255,255,255,0.08); padding: 0.2rem 0.5rem; border-radius: 4px; white-space: nowrap; }
+        
+        /* Action Buttons */
+        .header-actions { display: flex; align-items: center; gap: 1rem; }
+        .icon-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; padding: 5px; }
+        .icon-btn:hover { color: white; }
+        .icon-btn.delete-btn:hover { color: #ef4444; }
+        
+        .expand-icon { transition: transform 0.3s ease; }
+        .exam-card.expanded .expand-icon { transform: rotate(180deg); }
+
+        .exam-subjects-tags { display: flex; gap: 0.4rem; margin-top: 0.5rem; flex-wrap: wrap; }
+        .subj-tag { font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 50px; font-weight: 600; }
+        
+        .exam-body { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0, 1, 0, 1); background: rgba(0, 0, 0, 0.1); }
+        .exam-card.expanded .exam-body { max-height: 5000px; transition: max-height 0.7s ease-in-out; }
+        .syllabus-grid { padding: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+        
+        .subject-block h4 { font-size: 1.05rem; margin-bottom: 0.8rem; color: var(--accent-blue); border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.4rem; }
+        .category-title { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin: 0.8rem 0 0.4rem 0; font-weight: 600; }
+        
+        /* Functional Todo Items */
+        .topic-item { display: flex; align-items: flex-start; gap: 0.7rem; margin-bottom: 0.5rem; cursor: pointer; }
+        .topic-item input[type="checkbox"] { appearance: none; width: 18px; height: 18px; border: 2px solid var(--glass-border); border-radius: 5px; background: rgba(255, 255, 255, 0.02); cursor: pointer; position: relative; flex-shrink: 0; margin-top: 2px; }
+        .topic-item input[type="checkbox"]:checked { background: var(--accent-blue); border-color: var(--accent-blue); }
+        .topic-item input[type="checkbox"]:checked::after { content: '✓'; position: absolute; color: white; font-size: 12px; left: 3px; top: -2px; font-weight: bold; }
+        .topic-label { font-size: 0.9rem; color: #cbd5e1; transition: var(--transition-smooth); }
+        .topic-item input[type="checkbox"]:checked + .topic-label { color: var(--text-secondary); text-decoration: line-through; opacity: 0.5; }
+
+        /* =========================================================
+           COMMAND CENTER MODAL
+           ========================================================= */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); z-index: 1000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: var(--transition-smooth); padding: 1rem; }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        
+        .modal-content { background: #111827; border: 1px solid var(--glass-border); border-radius: var(--radius-lg); width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); transform: translateY(20px); transition: var(--transition-smooth); }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        
+        .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: #111827; z-index: 10; }
+        .modal-header h3 { font-size: 1.2rem; font-weight: 600; }
+        .close-btn { background: transparent; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; transition: 0.2s; }
+        .close-btn:hover { color: white; }
+
+        .modal-tabs { display: flex; border-bottom: 1px solid var(--glass-border); }
+        .tab-btn { flex: 1; background: transparent; border: none; color: var(--text-secondary); padding: 1rem; font-weight: 500; cursor: pointer; transition: 0.2s; border-bottom: 2px solid transparent; }
+        .tab-btn.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); background: rgba(59,130,246,0.05); }
+
+        .tab-content { padding: 1.5rem; display: none; }
+        .tab-content.active { display: block; }
+
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.4rem; }
+        .form-control { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: white; padding: 0.8rem; border-radius: var(--radius-sm); outline: none; font-family: inherit; }
+        .form-control:focus { border-color: var(--accent-purple); }
+        textarea.form-control { resize: vertical; min-height: 100px; }
+        
+        select.form-control option { background-color: #111827; color: #FFFFFF; font-weight: 500; }
+        
+        .ai-prompt-box { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); padding: 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; color: #93c5fd; margin-bottom: 1rem; line-height: 1.5; }
+
+        .toast { position: fixed; bottom: 20px; right: 20px; background: var(--accent-purple); color: white; padding: 1rem 2rem; border-radius: var(--radius-sm); box-shadow: var(--glass-shadow); transform: translateY(100px); opacity: 0; transition: var(--transition-smooth); z-index: 2000; font-weight: 500; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.error { background: #ef4444; }
+
+        /* Custom Footer Styling */
+        .app-footer { text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; letter-spacing: 0.5px; opacity: 0.6; margin-top: auto; width: 100%; }
+
+        /* =========================================================
+           MOBILE OPTIMIZATIONS
+           ========================================================= */
+        @media (max-width: 768px) {
+            .nav-content { padding: 0 1.5rem; flex-direction: column; gap: 1rem; align-items: flex-start; }
+            .nav-actions { width: 100%; justify-content: space-between; }
+            
+            .hero-section { margin-bottom: 1.5rem; }
+            .hero-title h2 { font-size: 2rem; }
+            
+            .stats-grid { grid-template-columns: 1fr; }
+            
+            .timeline::before { display: none; }
+            .exam-card-wrapper { flex-direction: column; gap: 1rem; }
+            .timeline-date-marker { margin-bottom: -20px; z-index: 5; margin-left: 20px; width: 45px; height: 45px; }
+            .timeline-date-marker span:first-child { font-size: 0.95rem !important; }
+            .timeline-date-marker span:last-child { font-size: 0.55rem !important; }
+            
+            .exam-header { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.5rem; }
+            .exam-info h3 { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            
+            .header-actions { width: 100%; justify-content: space-between; margin-top: 0.5rem; }
+            
+            .syllabus-grid { padding: 1.5rem; grid-template-columns: 1fr; }
+            
+            .modal-content { margin: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="aurora-bg"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+
+    <div id="authScreen">
+        <div class="auth-card">
+            <h2>Unique's Workload</h2>
+            <p>Sign in to sync your progress across devices, or keep it local.</p>
+            <button id="btnMainGoogleLogin" class="btn btn-primary">Sign in with Google</button>
+            <button id="btnOfflineMode" class="offline-btn">Use it offline</button>
+        </div>
+    </div>
+
+    <div id="appContainer">
+        <nav>
+            <div class="nav-content">
+                <div class="brand"><h1>Unique's Workload</h1></div>
+                <div class="nav-actions">
+                    <button class="btn" id="openCommandCenter" style="border-color: var(--accent-purple);">✨ Add Syllabus</button>
+                    <div id="navProfileArea" class="user-profile-container">
+                        </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <header class="hero-section">
+                <div class="hero-title">
+                    <h2 style="font-family: 'Inter', sans-serif;">Class XII Study Dashboard</h2>
+                    <p id="userSyncStatus">Status Loading...</p>
+                </div>
+            </header>
+
+            <section class="stats-grid">
+                <div class="stat-card" style="border-left: 4px solid var(--accent-blue);">
+                    <div class="stat-title">Next Deadline</div>
+                    <div class="stat-value" id="statNextExam">--</div>
+                    <div id="statCountdown" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">No upcoming exams</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Total Exams</div>
+                    <div class="stat-value" id="statTaskFraction">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Completion Metrics</div>
+                    <div class="stat-value" id="statPercent">0%</div>
+                </div>
+            </section>
+
+            <main class="timeline" id="timelineContainer">
+                </main>
+        </div>
+
+        <footer class="app-footer">
+            --made by advaay
+        </footer>
+    </div>
+
+    <div class="modal-overlay" id="commandModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Data Command Center</h3>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            
+            <div class="modal-tabs">
+                <button class="tab-btn active" data-target="tab-manual">Manual Add</button>
+                <button class="tab-btn" data-target="tab-ai">AI JSON Sync</button>
+            </div>
+
+            <div class="tab-content active" id="tab-manual">
+                <form id="manualAddForm">
+                    <div class="form-group">
+                        <label>Exam Name (e.g., PT-03)</label>
+                        <input type="text" id="manExam" class="form-control" required>
+                    </div>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <div class="form-group" style="flex: 1; min-width: 120px;">
+                            <label>Date (e.g., 20 Aug 2026)</label>
+                            <input type="text" id="manDate" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="flex: 1; min-width: 150px;">
+                            <label>Subject</label>
+                            <select id="manSubject" class="form-control">
+                                <option value="Physics">Physics</option>
+                                <option value="Chemistry">Chemistry</option>
+                                <option value="Biology">Biology</option>
+                                <option value="Mathematics">Mathematics</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Physical Education">Physical Education</option>
+                                <option value="English">English</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Category (e.g., Revision, Unit 1)</label>
+                        <input type="text" id="manCategory" class="form-control" value="Syllabus" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Topics (Separate with commas)</label>
+                        <textarea id="manTopics" class="form-control" placeholder="Electrostatics, Current Electricity..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding: 0.8rem; width: 100%;">Generate Tile</button>
+                </form>
+            </div>
+
+            <div class="tab-content" id="tab-ai">
+                <div class="ai-prompt-box">
+                    <strong>1. Copy this prompt to AI:</strong><br><br>
+                    "Convert my syllabus into a JSON array of objects. Format: <code>name</code> (Exam), <code>date</code> (YYYY-MM-DD), <code>marks</code>, and <code>subjects</code> array. Inside subjects: <code>name</code> and <code>categories</code> array. Inside categories: <code>name</code> and <code>topics</code> array of strings. Output raw JSON only."
+                </div>
+                <div class="form-group">
+                    <label>2. Paste AI JSON Here:</label>
+                    <textarea id="aiJsonInput" class="form-control" placeholder='[{"name": "PT-02", "date": "2026-07-20", ...}]'></textarea>
+                </div>
+                <button id="processAiJson" class="btn btn-primary" style="padding: 0.8rem; width: 100%;">Sync AI Data</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toastAlert" class="toast">Action Successful!</div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        // IMPORTED: setPersistence & browserLocalPersistence
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // ==========================================
+        // 🔑 DROP YOUR FIREBASE CONFIG HERE
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const isFirebaseConfigured = firebaseConfig.apiKey !== "YOUR_API_KEY";
+        let app, auth, db;
+        if(isFirebaseConfigured) {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            
+            // STRICT PERSISTENCE OVERRIDE: Forces browser to remember login
+            setPersistence(auth, browserLocalPersistence).catch(console.error);
+        }
+
+        // ==========================================
+        // STATE MANAGEMENT
+        // ==========================================
+        let currentSyllabusData = JSON.parse(localStorage.getItem('dynamic_syllabus_data')) || [];
+        let completedTasksArray = JSON.parse(localStorage.getItem('local_completed_tasks')) || [];
+        let currentUser = null;
+        let isOfflineMode = localStorage.getItem('offline_mode') === 'true';
+
+        const subjectColors = {
+            "Physics": "var(--subj-physics)", "Chemistry": "var(--subj-chemistry)",
+            "Biology": "var(--subj-biology)", "Computer Science": "var(--subj-cs)",
+            "Mathematics": "var(--subj-math)", "Physical Education": "#8b5cf6",
+            "Psychology": "var(--subj-psychology)", "English": "var(--subj-english)"
+        };
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toastAlert');
+            toast.textContent = message;
+            toast.className = `toast show ${isError ? 'error' : ''}`;
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+        // ==========================================
+        // AUTH & GATEKEEPER LOGIC
+        // ==========================================
+        const authScreen = document.getElementById('authScreen');
+        const appContainer = document.getElementById('appContainer');
+
+        function openApp(mode) {
+            authScreen.classList.add('hidden');
+            appContainer.classList.add('visible');
+            
+            if (mode === 'offline') {
+                isOfflineMode = true;
+                localStorage.setItem('offline_mode', 'true');
+                document.getElementById('userSyncStatus').textContent = "Offline Mode • Data saved locally";
+                document.getElementById('navProfileArea').innerHTML = `
+                    <button class="btn btn-outline" id="btnExitOffline">Exit Offline Mode</button>
+                `;
+                document.getElementById('btnExitOffline').addEventListener('click', () => {
+                    localStorage.removeItem('offline_mode');
+                    location.reload();
+                });
+                renderDashboardStructure();
+            }
+        }
+
+        document.getElementById('btnOfflineMode').addEventListener('click', () => openApp('offline'));
+
+        document.getElementById('btnMainGoogleLogin').addEventListener('click', () => {
+            if(isFirebaseConfigured) {
+                const provider = new GoogleAuthProvider();
+                signInWithPopup(auth, provider).catch(err => showToast("Login failed", true));
+            } else {
+                showToast("Firebase keys not added to code yet! Falling back to offline mode.", true);
+                setTimeout(() => openApp('offline'), 2000);
+            }
+        });
+
+        if(isFirebaseConfigured) {
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    currentUser = user;
+                    localStorage.removeItem('offline_mode');
+                    document.getElementById('userSyncStatus').textContent = `Cloud sync active • ${user.displayName}`;
+                    
+                    document.getElementById('navProfileArea').innerHTML = `
+                        <span class="logout-text" id="btnNavSignOut">Sign Out</span>
+                        <img src="${user.photoURL}" class="profile-pic" title="${user.email}" alt="Profile">
+                    `;
+                    document.getElementById('btnNavSignOut').addEventListener('click', () => signOut(auth));
+                    
+                    // Pull from cloud
+                    await pullDataFromCloud(user.uid);
+                    
+                    // Show the app and literally draw the tiles on the screen!
+                    openApp('cloud');
+                    renderDashboardStructure(); 
+                } else {
+                    currentUser = null;
+                    if(localStorage.getItem('offline_mode') === 'true') {
+                        openApp('offline');
+                    } else {
+                        authScreen.classList.remove('hidden');
+                        appContainer.classList.remove('visible');
+                    }
+                }
+            });
+        } else {
+            if(isOfflineMode) openApp('offline');
+        }
+
+        // ==========================================
+        // CLOUD SYNC ENGINE
+        // ==========================================
+        async function syncData() {
+            localStorage.setItem('dynamic_syllabus_data', JSON.stringify(currentSyllabusData));
+            localStorage.setItem('local_completed_tasks', JSON.stringify(completedTasksArray));
+            
+            if (currentUser && isFirebaseConfigured) {
+                try {
+                    await setDoc(doc(db, "users", currentUser.uid), {
+                        completedTasks: completedTasksArray,
+                        customSyllabus: currentSyllabusData
+                    }, { merge: true });
+                } catch (e) { console.error("Cloud Save Error", e); }
+            }
+            renderDashboardStructure();
+        }
+
+        async function pullDataFromCloud(uid) {
+            try {
+                const userDoc = await getDoc(doc(db, "users", uid));
+                if (userDoc.exists()) {
+                    const data = userDoc.data();
+                    if(data.completedTasks) completedTasksArray = data.completedTasks;
+                    if(data.customSyllabus) currentSyllabusData = data.customSyllabus;
+                    
+                    localStorage.setItem('dynamic_syllabus_data', JSON.stringify(currentSyllabusData));
+                    localStorage.setItem('local_completed_tasks', JSON.stringify(completedTasksArray));
+                }
+            } catch (e) { console.error("Cloud Pull Error", e); }
+        }
+
+        // ==========================================
+        // UI & RENDER LOGIC
+        // ==========================================
+        
+        function autoPatchLegacyIds() {
+            let needsPatching = false;
+            currentSyllabusData.forEach((exam, index) => {
+                if (!exam.id) {
+                    exam.id = `legacy-exam-${Date.now()}-${index}`;
+                    needsPatching = true;
+                }
+            });
+            if (needsPatching) {
+                localStorage.setItem('dynamic_syllabus_data', JSON.stringify(currentSyllabusData));
+            }
+        }
+
+        function formatCircleDate(dateString) {
+            if(!dateString || dateString === "No Date") return `<span style="font-size:1.2rem;">📌</span>`;
+            
+            const d = new Date(dateString);
+            if (!isNaN(d.getTime())) {
+                const day = d.getDate();
+                const month = d.toLocaleString('default', { month: 'short' }).toUpperCase();
+                return `<span style="font-size: 1.1rem; font-weight: 700;">${day}</span><span style="font-size: 0.65rem; font-weight: 600; color: var(--accent-blue);">${month}</span>`;
+            }
+            return `<span style="font-size: 0.9rem; font-weight: 700;">${dateString.substring(0,2)}</span>`;
+        }
+
+        function renderDashboardStructure() {
+            const container = document.getElementById('timelineContainer');
+            container.innerHTML = '';
+
+            autoPatchLegacyIds();
+
+            if (currentSyllabusData.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5; margin-bottom: 1rem;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        <h3>Your Workspace is Empty</h3>
+                        <p>Click "Add Syllabus" above to start building your dashboard.</p>
+                    </div>
+                `;
+                updateMetrics();
+                return;
+            }
+
+            currentSyllabusData.sort((a,b) => new Date(a.date) - new Date(b.date));
+
+            currentSyllabusData.forEach(exam => {
+                const subTags = exam.subjects.map(s => {
+                    const color = subjectColors[s.name] || '#8b5cf6';
+                    return `<span class="subj-tag" style="background:${color}15; color:${color}; border:1px solid ${color}30">${s.name}</span>`;
+                }).join('');
+
+                let syllabusHtml = '';
+                exam.subjects.forEach(sub => {
+                    let blocks = '';
+                    sub.categories.forEach(cat => {
+                        let topicsHtml = '';
+                        cat.topics.forEach(topic => {
+                            const uniqueId = `${exam.id}_${sub.name}_${cat.name}_${topic}`.toLowerCase().replace(/[^a-z0-9]/g, '_');
+                            const isChecked = completedTasksArray.includes(uniqueId) ? 'checked' : '';
+                            topicsHtml += `
+                                <label class="topic-item">
+                                    <input type="checkbox" data-uid="${uniqueId}" ${isChecked}>
+                                    <span class="topic-label">${topic}</span>
+                                </label>
+                            `;
+                        });
+                        blocks += `<div><div class="category-title">${cat.name}</div>${topicsHtml}</div>`;
+                    });
+
+                    syllabusHtml += `
+                        <div class="subject-block">
+                            <h4 style="color:${subjectColors[sub.name] || '#FFF'}">${sub.name}</h4>
+                            ${blocks}
+                        </div>
+                    `;
+                });
+
+                const wrapper = `
+                    <div class="exam-card-wrapper">
+                        <div class="timeline-date-marker">${formatCircleDate(exam.date)}</div>
+                        <article class="exam-card">
+                            <div class="exam-header">
+                                <div>
+                                    <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.2rem;">${exam.date}</div>
+                                    <div class="exam-info"><h3>${exam.name} <span class="exam-marks">${exam.marks || '-'} MARKS</span></h3></div>
+                                    <div class="exam-subjects-tags">${subTags}</div>
+                                </div>
+                                <div class="header-actions">
+                                    <button class="icon-btn delete-btn" data-exam-id="${exam.id}" title="Delete Exam">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    </button>
+                                    <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </div>
+                            </div>
+                            <div class="exam-body"><div class="syllabus-grid">${syllabusHtml}</div></div>
+                        </article>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', wrapper);
+            });
+
+            updateMetrics();
+        }
+
+        function updateMetrics() {
+            const totalExams = currentSyllabusData.length;
+            document.getElementById('statTaskFraction').textContent = totalExams;
+
+            const totalBoxes = document.querySelectorAll('.topic-item input[type="checkbox"]');
+            const totalCount = totalBoxes.length;
+            let checkCount = 0;
+            totalBoxes.forEach(box => { if(box.checked) checkCount++; });
+
+            const percent = totalCount === 0 ? 0 : Math.round((checkCount / totalCount) * 100);
+            document.getElementById('statPercent').textContent = `${percent}%`;
+
+            if(currentSyllabusData.length > 0) {
+                const now = new Date();
+                const upcoming = currentSyllabusData.find(e => new Date(e.date) >= now) || currentSyllabusData[0];
+                
+                document.getElementById('statNextExam').textContent = upcoming.name;
+                document.getElementById('statCountdown').textContent = `Target: ${upcoming.date}`;
+            } else {
+                document.getElementById('statNextExam').textContent = "--";
+                document.getElementById('statCountdown').textContent = "No upcoming exams";
+            }
+        }
+
+        // ==========================================
+        // COMMAND CENTER & EVENT LISTENERS
+        // ==========================================
+        const modal = document.getElementById('commandModal');
+        document.getElementById('openCommandCenter').addEventListener('click', () => modal.classList.add('active'));
+        document.getElementById('closeModal').addEventListener('click', () => modal.classList.remove('active'));
+        
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                e.target.classList.add('active');
+                document.getElementById(e.target.dataset.target).classList.add('active');
+            });
+        });
+
+        document.getElementById('manualAddForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const examName = document.getElementById('manExam').value.trim();
+            const examDate = document.getElementById('manDate').value.trim();
+            const subjectName = document.getElementById('manSubject').value;
+            const categoryName = document.getElementById('manCategory').value.trim();
+            const topicsRaw = document.getElementById('manTopics').value;
+            const topicsArray = topicsRaw.split(',').map(t => t.trim()).filter(t => t !== '');
+
+            let exam = currentSyllabusData.find(e => e.name.toLowerCase() === examName.toLowerCase());
+            
+            if(!exam) { 
+                exam = { id: `exam-${Date.now()}`, name: examName, date: examDate, marks: "-", subjects: [] }; 
+                currentSyllabusData.push(exam); 
+            }
+            
+            let subject = exam.subjects.find(s => s.name === subjectName);
+            if(!subject) { subject = { name: subjectName, categories: [] }; exam.subjects.push(subject); }
+            
+            let category = subject.categories.find(c => c.name === categoryName);
+            if(!category) { category = { name: categoryName, topics: [] }; subject.categories.push(category); }
+            
+            category.topics = [...new Set([...category.topics, ...topicsArray])];
+
+            await syncData();
+            showToast("Tile successfully generated!");
+            modal.classList.remove('active');
+            document.getElementById('manualAddForm').reset();
+        });
+
+        document.getElementById('processAiJson').addEventListener('click', async () => {
+            const rawJson = document.getElementById('aiJsonInput').value.trim();
+            if(!rawJson) return showToast("Paste JSON first.", true);
+            try {
+                const cleanedJson = rawJson.replace(/```json/g, '').replace(/```/g, '').trim();
+                const parsedData = JSON.parse(cleanedJson);
+                if(!Array.isArray(parsedData)) throw new Error("Must be array");
+                
+                parsedData.forEach((ex, i) => {
+                    if(!ex.id) ex.id = `exam-ai-${Date.now()}-${i}`;
+                });
+                
+                currentSyllabusData = [...currentSyllabusData, ...parsedData];
+                await syncData();
+                showToast("AI Sync Complete!");
+                modal.classList.remove('active');
+                document.getElementById('aiJsonInput').value = '';
+            } catch (err) { showToast("Invalid JSON format.", true); }
+        });
+
+        document.getElementById('timelineContainer').addEventListener('click', async (e) => {
+            const deleteBtn = e.target.closest('.delete-btn');
+            if (deleteBtn) {
+                e.stopPropagation();
+                if (confirm("Are you sure you want to completely remove this exam tile?")) {
+                    const examId = deleteBtn.getAttribute('data-exam-id');
+                    
+                    const previousLength = currentSyllabusData.length;
+                    currentSyllabusData = currentSyllabusData.filter(ex => String(ex.id) !== String(examId));
+                    
+                    if(currentSyllabusData.length !== previousLength) {
+                        await syncData();
+                        showToast("Exam removed successfully.");
+                    } else {
+                        showToast("Error locating exam ID.", true);
+                    }
+                }
+                return;
+            }
+
+            const header = e.target.closest('.exam-header');
+            if(header && !e.target.closest('.topic-item')) {
+                header.closest('.exam-card').classList.toggle('expanded');
+            }
+        });
+
+        document.getElementById('timelineContainer').addEventListener('change', async (e) => {
+            if(e.target.type === 'checkbox') {
+                const uid = e.target.dataset.uid;
+                if(e.target.checked) {
+                    if(!completedTasksArray.includes(uid)) completedTasksArray.push(uid);
+                } else {
+                    completedTasksArray = completedTasksArray.filter(i => i !== uid);
+                }
+                updateMetrics();
+                await syncData();
+            }
+        });
+
+    </script>
+</body>
+</html>
