@@ -1,6 +1,5 @@
-========================================
+
          DYNAMIC TO-DO MATRIX
-========================================
 
 A premium productivity dashboard built for seamless task 
 management, deep focus, and cloud synchronization.
