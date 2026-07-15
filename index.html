@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unique's Workload</title>
+    <title>Dynamic To-Do</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,600;1,700&display=swap" rel="stylesheet">
 
     <style>
         /* =========================================================
-           CORE THEME & VARIABLES
+           CORE THEME & VARIABLES (DYNAMIC)
            ========================================================= */
         :root {
+            /* Default Blue/Purple Theme */
             --bg-color: #0B1120;
             --text-primary: #FFFFFF;
             --text-secondary: #A0AEC0;
             --accent-blue: #3b82f6;
             --accent-purple: #8b5cf6;
-            --gradient-primary: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            --pomo-shadow: rgba(139, 92, 246, 0.4);
+            --pomo-shadow-hover: rgba(139, 92, 246, 0.6);
             
             --subj-physics: #3b82f6;
             --subj-chemistry: #10b981;
@@ -36,54 +38,57 @@
             --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
+        /* Sakura Theme */
+        body.theme-sakura {
+            --bg-color: #1a0b12;
+            --accent-blue: #f43f5e;
+            --accent-purple: #fda4af;
+            --pomo-shadow: rgba(244, 63, 94, 0.4);
+            --pomo-shadow-hover: rgba(244, 63, 94, 0.6);
+        }
+
+        /* Emerald Theme */
+        body.theme-emerald {
+            --bg-color: #061c16;
+            --accent-blue: #10b981;
+            --accent-purple: #14b8a6;
+            --pomo-shadow: rgba(16, 185, 129, 0.4);
+            --pomo-shadow-hover: rgba(16, 185, 129, 0.6);
+        }
+
+        /* Midnight Theme */
+        body.theme-midnight {
+            --bg-color: #07090f;
+            --accent-blue: #6366f1;
+            --accent-purple: #4338ca;
+            --pomo-shadow: rgba(99, 102, 241, 0.4);
+            --pomo-shadow-hover: rgba(99, 102, 241, 0.6);
+        }
+
+        .gradient-text { background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .gradient-bg { background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple)); }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-primary); overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; }
+        body { background-color: var(--bg-color); color: var(--text-primary); overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; transition: background-color 0.5s ease; }
 
         /* Background Aurora */
-        .aurora-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; overflow: hidden; background: var(--bg-color); }
-        .blob { position: absolute; filter: blur(100px); opacity: 0.4; animation: float 20s infinite alternate ease-in-out; }
+        .aurora-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; overflow: hidden; background: var(--bg-color); transition: background-color 0.5s ease; }
+        .blob { position: absolute; filter: blur(100px); opacity: 0.4; animation: float 20s infinite alternate ease-in-out; transition: background-color 0.5s ease; }
         .blob-1 { background: var(--accent-blue); width: 40vw; height: 40vw; top: -10%; left: -10%; border-radius: 50%; }
         .blob-2 { background: var(--accent-purple); width: 35vw; height: 35vw; bottom: -10%; right: -10%; border-radius: 50%; animation-delay: -5s; }
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(10%, 10%) scale(1.1); } }
 
+        /* Utility */
+        .hidden-section { display: none !important; }
+
         /* =========================================================
-           AUTH GATEKEEPER (LOGIN SCREEN)
+           AUTH GATEKEEPER
            ========================================================= */
         #authScreen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg-color); z-index: 9999; display: flex; justify-content: center; align-items: center; transition: var(--transition-smooth); backdrop-filter: blur(20px); }
         #authScreen.hidden { opacity: 0; pointer-events: none; }
-        
-        .auth-card { 
-            background: var(--glass-bg); 
-            border: 1px solid var(--glass-border); 
-            border-radius: var(--radius-lg); 
-            padding: 3.5rem 2.5rem; 
-            text-align: center; 
-            max-width: 450px; 
-            width: 90%; 
-            box-shadow: var(--glass-shadow); 
-            backdrop-filter: blur(16px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .auth-card h2 { 
-            font-family: 'Playfair Display', serif; 
-            font-style: italic;
-            font-size: 2.4rem;
-            font-weight: 700; 
-            margin-bottom: 0.8rem; 
-            padding: 0 5px; 
-            background: var(--gradient-primary); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.25));
-            line-height: 1.2;
-            width: 100%;
-        }
-
+        .auth-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); padding: 3.5rem 2.5rem; text-align: center; max-width: 450px; width: 90%; box-shadow: var(--glass-shadow); backdrop-filter: blur(16px); display: flex; flex-direction: column; align-items: center; }
+        .auth-card h2 { font-family: 'Playfair Display', serif; font-style: italic; font-size: 2.4rem; font-weight: 700; margin-bottom: 0.8rem; padding: 0 5px; filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.25)); line-height: 1.2; width: 100%; }
         .auth-card p { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 2.5rem; line-height: 1.5; width: 100%; }
-        
         #btnMainGoogleLogin { width: 100%; padding: 0.9rem; margin-bottom: 12px; justify-content: center; }
         .offline-btn { background: transparent; border: none; color: var(--text-secondary); margin-top: 0.5rem; cursor: pointer; font-size: 0.85rem; text-decoration: underline; transition: 0.2s; padding: 0.5rem; }
         .offline-btn:hover { color: white; }
@@ -93,60 +98,75 @@
         #appContainer.visible { opacity: 1; pointer-events: all; }
 
         /* Navigation */
-        nav { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); background: rgba(11, 17, 32, 0.7); border-bottom: 1px solid var(--glass-border); padding: 1rem 0; width: 100%; }
+        nav { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); background: rgba(11, 17, 32, 0.7); border-bottom: 1px solid var(--glass-border); padding: 1rem 0; width: 100%; transition: var(--transition-smooth); }
         .nav-content { width: 100%; max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; padding: 0 2rem; }
-        
-        .brand h1 { 
-            font-family: 'Playfair Display', serif; 
-            font-style: italic;
-            font-size: 1.6rem; 
-            font-weight: 700; 
-            letter-spacing: 0.5px; 
-            color: white; 
-            margin: 0; 
-            background: var(--gradient-primary); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.2)); 
-        }
-        
+        .brand h1 { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.6rem; font-weight: 700; letter-spacing: 0.5px; color: white; margin: 0; filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.2)); }
         .nav-actions { display: flex; align-items: center; gap: 0.8rem; }
         
-        /* Buttons & Profile */
+        /* Buttons */
         .btn { background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 0.6rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: var(--transition-smooth); white-space: nowrap; }
         .btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); transform: translateY(-1px); }
-        .btn-primary { background: var(--gradient-primary); border: none; justify-content: center; }
-        .btn-primary:hover { opacity: 0.9; box-shadow: 0 0 15px rgba(139, 92, 246, 0.4); }
+        .btn-primary { border: none; justify-content: center; }
+        .btn-primary:hover { opacity: 0.9; box-shadow: 0 0 15px var(--accent-purple); }
         .btn-outline { background: transparent; border: 1px solid var(--glass-border); color: var(--text-secondary); }
         .btn-outline:hover { color: white; border-color: var(--text-secondary); }
         
+        /* Theme Dropdown */
+        .theme-select { appearance: none; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 0.6rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; cursor: pointer; outline: none; }
+        .theme-select option { background-color: #111827; color: white; }
+
         .user-profile-container { display: flex; align-items: center; gap: 0.8rem; }
         .profile-pic { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--accent-purple); object-fit: cover; cursor: pointer; flex-shrink: 0; }
         .logout-text { font-size: 0.8rem; color: #ef4444; cursor: pointer; display: none; font-weight: 600; }
         .user-profile-container:hover .logout-text { display: block; }
 
+        /* Floating Action Button for Pomodoro Toggle with dynamic variables */
+        .floating-pomo-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            border: none;
+            color: white;
+            font-size: 1.6rem;
+            cursor: pointer;
+            box-shadow: 0 8px 32px var(--pomo-shadow);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+        }
+        .floating-pomo-btn:hover {
+            transform: scale(1.1) translateY(-3px);
+            box-shadow: 0 12px 40px var(--pomo-shadow-hover);
+        }
+
+        /* General Container */
         .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 2rem; flex: 1; display: flex; flex-direction: column; }
         
-        /* Dashboard Layout Components */
+        /* =========================================================
+           DASHBOARD SECTION
+           ========================================================= */
         .hero-section { margin-bottom: 2.5rem; }
         .hero-title h2 { font-size: 2.5rem; font-weight: 700; letter-spacing: -1px; margin-bottom: 0.5rem; line-height: 1.2; }
-
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; width: 100%; }
         .stat-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 1.5rem; backdrop-filter: blur(16px); box-shadow: var(--glass-shadow); }
         .stat-title { color: var(--text-secondary); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
         .stat-value { font-size: 1.8rem; font-weight: 700; margin-top: 0.5rem; }
         
-        /* Timeline Elements */
         .timeline { display: flex; flex-direction: column; gap: 2rem; position: relative; padding-bottom: 2rem; }
         .timeline::before { content: ''; position: absolute; left: 25px; top: 0; bottom: 0; width: 2px; background: var(--glass-border); }
         
-        /* Empty State */
         .empty-state { text-align: center; padding: 4rem 2rem; background: var(--glass-bg); border: 1px dashed var(--glass-border); border-radius: var(--radius-lg); backdrop-filter: blur(10px); }
         .empty-state h3 { font-size: 1.5rem; margin-bottom: 0.5rem; color: white; }
         .empty-state p { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.5rem; }
 
         .exam-card-wrapper { display: flex; gap: 2rem; position: relative; z-index: 1; }
-        .timeline-date-marker { width: 52px; height: 52px; border-radius: 50%; background: var(--bg-color); border: 2px solid var(--accent-blue); display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); z-index: 2; line-height: 1; }
+        .timeline-date-marker { width: 52px; height: 52px; border-radius: 50%; background: var(--bg-color); border: 2px solid var(--accent-blue); display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); z-index: 2; line-height: 1; transition: border-color 0.5s; }
         
         .exam-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); backdrop-filter: blur(20px); width: 100%; overflow: hidden; box-shadow: var(--glass-shadow); transition: var(--transition-smooth); }
         .exam-header { padding: 1.5rem 2rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
@@ -154,11 +174,11 @@
         .exam-info h3 { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
         .exam-marks { font-size: 0.8rem; color: var(--text-secondary); background: rgba(255,255,255,0.08); padding: 0.2rem 0.5rem; border-radius: 4px; white-space: nowrap; }
         
-        /* Action Buttons */
-        .header-actions { display: flex; align-items: center; gap: 1rem; }
+        .header-actions { display: flex; align-items: center; gap: 0.8rem; }
         .icon-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; padding: 5px; }
         .icon-btn:hover { color: white; }
         .icon-btn.delete-btn:hover { color: #ef4444; }
+        .icon-btn.edit-btn:hover { color: var(--accent-blue); }
         
         .expand-icon { transition: transform 0.3s ease; }
         .exam-card.expanded .expand-icon { transform: rotate(180deg); }
@@ -169,11 +189,9 @@
         .exam-body { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0, 1, 0, 1); background: rgba(0, 0, 0, 0.1); }
         .exam-card.expanded .exam-body { max-height: 5000px; transition: max-height 0.7s ease-in-out; }
         .syllabus-grid { padding: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
-        
-        .subject-block h4 { font-size: 1.05rem; margin-bottom: 0.8rem; color: var(--accent-blue); border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.4rem; }
+        .subject-block h4 { font-size: 1.05rem; margin-bottom: 0.8rem; color: var(--accent-blue); border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.4rem; transition: color 0.5s; }
         .category-title { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin: 0.8rem 0 0.4rem 0; font-weight: 600; }
         
-        /* Functional Todo Items */
         .topic-item { display: flex; align-items: flex-start; gap: 0.7rem; margin-bottom: 0.5rem; cursor: pointer; }
         .topic-item input[type="checkbox"] { appearance: none; width: 18px; height: 18px; border: 2px solid var(--glass-border); border-radius: 5px; background: rgba(255, 255, 255, 0.02); cursor: pointer; position: relative; flex-shrink: 0; margin-top: 2px; }
         .topic-item input[type="checkbox"]:checked { background: var(--accent-blue); border-color: var(--accent-blue); }
@@ -182,14 +200,35 @@
         .topic-item input[type="checkbox"]:checked + .topic-label { color: var(--text-secondary); text-decoration: line-through; opacity: 0.5; }
 
         /* =========================================================
-           COMMAND CENTER MODAL
+           POMODORO SECTION
+           ========================================================= */
+        #pomodoroSection { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh; gap: 2rem; }
+        .pomo-grid { display: flex; gap: 2rem; width: 100%; justify-content: center; flex-wrap: wrap; }
+        
+        .pomo-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); padding: 3rem; text-align: center; box-shadow: var(--glass-shadow); backdrop-filter: blur(16px); min-width: 350px; position: relative; }
+        .pomo-modes { display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem; }
+        .pomo-mode-btn { background: transparent; border: none; color: var(--text-secondary); font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: 0.2s; padding-bottom: 5px; border-bottom: 2px solid transparent; }
+        .pomo-mode-btn.active { color: var(--text-primary); border-bottom-color: var(--accent-blue); }
+        
+        .pomo-timer { font-size: 6rem; font-weight: 700; margin-bottom: 2rem; font-variant-numeric: tabular-nums; line-height: 1; }
+        .pomo-controls { display: flex; gap: 1rem; justify-content: center; }
+        .pomo-controls .btn { font-size: 1rem; padding: 0.8rem 2rem; }
+
+        /* Pomodoro Settings Panel */
+        #btnPomoSettingsToggle { position: absolute; top: 1.5rem; right: 1.5rem; background: transparent; border: none; color: var(--text-secondary); font-size: 1.2rem; cursor: pointer; transition: var(--transition-smooth); }
+        #btnPomoSettingsToggle:hover { color: white; transform: rotate(90deg); }
+        
+        .pomo-settings-panel { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); padding: 1.5rem; margin-top: 1.5rem; text-align: left; }
+        .pomo-settings-panel .form-group label { font-size: 0.8rem; }
+        .pomo-settings-panel .form-control { padding: 0.6rem; font-size: 0.9rem; margin-bottom: 0.5rem; }
+
+        /* =========================================================
+           MODALS
            ========================================================= */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); z-index: 1000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: var(--transition-smooth); padding: 1rem; }
         .modal-overlay.active { opacity: 1; pointer-events: all; }
-        
         .modal-content { background: #111827; border: 1px solid var(--glass-border); border-radius: var(--radius-lg); width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); transform: translateY(20px); transition: var(--transition-smooth); }
         .modal-overlay.active .modal-content { transform: translateY(0); }
-        
         .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: #111827; z-index: 10; }
         .modal-header h3 { font-size: 1.2rem; font-weight: 600; }
         .close-btn { background: transparent; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; transition: 0.2s; }
@@ -198,7 +237,6 @@
         .modal-tabs { display: flex; border-bottom: 1px solid var(--glass-border); }
         .tab-btn { flex: 1; background: transparent; border: none; color: var(--text-secondary); padding: 1rem; font-weight: 500; cursor: pointer; transition: 0.2s; border-bottom: 2px solid transparent; }
         .tab-btn.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); background: rgba(59,130,246,0.05); }
-
         .tab-content { padding: 1.5rem; display: none; }
         .tab-content.active { display: block; }
 
@@ -207,44 +245,29 @@
         .form-control { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: white; padding: 0.8rem; border-radius: var(--radius-sm); outline: none; font-family: inherit; }
         .form-control:focus { border-color: var(--accent-purple); }
         textarea.form-control { resize: vertical; min-height: 100px; }
-        
         select.form-control option { background-color: #111827; color: #FFFFFF; font-weight: 500; }
         
         .ai-prompt-box { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); padding: 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; color: #93c5fd; margin-bottom: 1rem; line-height: 1.5; }
 
+        .code-textarea { font-family: monospace; font-size: 0.85rem; white-space: pre; background: rgba(0,0,0,0.2) !important; color: #93c5fd !important; line-height: 1.5; }
+
         .toast { position: fixed; bottom: 20px; right: 20px; background: var(--accent-purple); color: white; padding: 1rem 2rem; border-radius: var(--radius-sm); box-shadow: var(--glass-shadow); transform: translateY(100px); opacity: 0; transition: var(--transition-smooth); z-index: 2000; font-weight: 500; }
         .toast.show { transform: translateY(0); opacity: 1; }
-        .toast.error { background: #ef4444; }
 
-        /* Custom Footer Styling */
         .app-footer { text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; letter-spacing: 0.5px; opacity: 0.6; margin-top: auto; width: 100%; }
 
-        /* =========================================================
-           MOBILE OPTIMIZATIONS
-           ========================================================= */
         @media (max-width: 768px) {
             .nav-content { padding: 0 1.5rem; flex-direction: column; gap: 1rem; align-items: flex-start; }
-            .nav-actions { width: 100%; justify-content: space-between; }
-            
-            .hero-section { margin-bottom: 1.5rem; }
+            .nav-actions { width: 100%; justify-content: space-between; flex-wrap: wrap; }
             .hero-title h2 { font-size: 2rem; }
-            
             .stats-grid { grid-template-columns: 1fr; }
-            
             .timeline::before { display: none; }
             .exam-card-wrapper { flex-direction: column; gap: 1rem; }
             .timeline-date-marker { margin-bottom: -20px; z-index: 5; margin-left: 20px; width: 45px; height: 45px; }
-            .timeline-date-marker span:first-child { font-size: 0.95rem !important; }
-            .timeline-date-marker span:last-child { font-size: 0.55rem !important; }
-            
             .exam-header { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.5rem; }
-            .exam-info h3 { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-            
-            .header-actions { width: 100%; justify-content: space-between; margin-top: 0.5rem; }
-            
-            .syllabus-grid { padding: 1.5rem; grid-template-columns: 1fr; }
-            
-            .modal-content { margin: 1rem; }
+            .header-actions { width: 100%; justify-content: flex-end; margin-top: 0.5rem; }
+            .pomo-grid { flex-direction: column; }
+            .floating-pomo-btn { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 1.4rem; }
         }
     </style>
 </head>
@@ -254,9 +277,9 @@
 
     <div id="authScreen">
         <div class="auth-card">
-            <h2>Unique's Workload</h2>
+            <h2 class="gradient-text">Dynamic To-Do</h2>
             <p>Sign in to sync your progress across devices, or keep it local.</p>
-            <button id="btnMainGoogleLogin" class="btn btn-primary">Sign in with Google</button>
+            <button id="btnMainGoogleLogin" class="btn btn-primary gradient-bg">Sign in with Google</button>
             <button id="btnOfflineMode" class="offline-btn">Use it offline</button>
         </div>
     </div>
@@ -264,19 +287,28 @@
     <div id="appContainer">
         <nav>
             <div class="nav-content">
-                <div class="brand"><h1>Unique's Workload</h1></div>
+                <div class="brand"><h1 class="gradient-text">Dynamic To-Do</h1></div>
                 <div class="nav-actions">
+                    <select id="themeSwitcher" class="theme-select">
+                        <option value="default">✨ Default Theme</option>
+                        <option value="theme-sakura">🌸 Sakura Pink</option>
+                        <option value="theme-emerald">🌲 Emerald Green</option>
+                        <option value="theme-midnight">🌌 Midnight Indigo</option>
+                    </select>
+
                     <button class="btn" id="openCommandCenter" style="border-color: var(--accent-purple);">✨ Add Syllabus</button>
-                    <div id="navProfileArea" class="user-profile-container">
-                        </div>
+                    
+                    <div id="navProfileArea" class="user-profile-container"></div>
                 </div>
             </div>
         </nav>
 
-        <div class="container">
+        <button id="btnTogglePomodoro" class="floating-pomo-btn" title="Go to Focus Room">⏱</button>
+
+        <div class="container" id="dashboardSection">
             <header class="hero-section">
                 <div class="hero-title">
-                    <h2 style="font-family: 'Inter', sans-serif;">Class XII Study Dashboard</h2>
+                    <h2 style="font-family: 'Inter', sans-serif;">Dynamic To-Do Matrix</h2>
                     <p id="userSyncStatus">Status Loading...</p>
                 </div>
             </header>
@@ -285,25 +317,66 @@
                 <div class="stat-card" style="border-left: 4px solid var(--accent-blue);">
                     <div class="stat-title">Next Deadline</div>
                     <div class="stat-value" id="statNextExam">--</div>
-                    <div id="statCountdown" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">No upcoming exams</div>
+                    <div id="statCountdown" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">No upcoming tasks</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-title">Total Exams</div>
+                    <div class="stat-title">Total Ledgers</div>
                     <div class="stat-value" id="statTaskFraction">0</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-title">Completion Metrics</div>
-                    <div class="stat-value" id="statPercent">0%</div>
+                    <div class="stat-value gradient-text" id="statPercent">0%</div>
                 </div>
             </section>
 
-            <main class="timeline" id="timelineContainer">
-                </main>
+            <main class="timeline" id="timelineContainer"></main>
         </div>
 
-        <footer class="app-footer">
-            --made by advaay
-        </footer>
+        <div class="container hidden-section" id="pomodoroSection">
+            <div class="hero-title" style="text-align: center; margin-bottom: 2rem;">
+                <h2 style="font-family: 'Inter', sans-serif;">Focus Room</h2>
+                <p style="color: var(--text-secondary);">Block out distractions and get things done.</p>
+            </div>
+
+            <div class="pomo-grid">
+                <div class="pomo-card">
+                    <button id="btnPomoSettingsToggle" title="Adjust Timers">⚙️</button>
+
+                    <div class="pomo-modes">
+                        <button class="pomo-mode-btn active" data-mode="focus">Focus</button>
+                        <button class="pomo-mode-btn" data-mode="short">Short Break</button>
+                        <button class="pomo-mode-btn" data-mode="long">Long Break</button>
+                    </div>
+                    
+                    <div class="pomo-timer gradient-text" id="timerDisplay">25:00</div>
+                    
+                    <div class="pomo-controls">
+                        <button class="btn btn-primary gradient-bg" id="btnTimerToggle">Start</button>
+                        <button class="btn btn-outline" id="btnTimerReset">Reset</button>
+                    </div>
+
+                    <div class="pomo-settings-panel hidden-section" id="pomoSettingsPanel">
+                        <div style="display: flex; gap: 1rem;">
+                            <div class="form-group" style="flex: 1;">
+                                <label>Focus (min)</label>
+                                <input type="number" id="setPomoFocus" class="form-control" min="1" max="120">
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label>Short (min)</label>
+                                <input type="number" id="setPomoShort" class="form-control" min="1" max="60">
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label>Long (min)</label>
+                                <input type="number" id="setPomoLong" class="form-control" min="1" max="60">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary gradient-bg" id="btnSavePomoSettings" style="width: 100%; justify-content: center;">Save Timers</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="app-footer">--engineered by advaay</footer>
     </div>
 
     <div class="modal-overlay" id="commandModal">
@@ -321,7 +394,7 @@
             <div class="tab-content active" id="tab-manual">
                 <form id="manualAddForm">
                     <div class="form-group">
-                        <label>Exam Name (e.g., PT-03)</label>
+                        <label>Matrix Name (e.g., Target Alpha)</label>
                         <input type="text" id="manExam" class="form-control" required>
                     </div>
                     <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
@@ -330,7 +403,7 @@
                             <input type="text" id="manDate" class="form-control" required>
                         </div>
                         <div class="form-group" style="flex: 1; min-width: 150px;">
-                            <label>Subject</label>
+                            <label>Domain</label>
                             <select id="manSubject" class="form-control">
                                 <option value="Physics">Physics</option>
                                 <option value="Chemistry">Chemistry</option>
@@ -343,27 +416,65 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Category (e.g., Revision, Unit 1)</label>
-                        <input type="text" id="manCategory" class="form-control" value="Syllabus" required>
+                        <label>Category (e.g., Priority, Unit 1)</label>
+                        <input type="text" id="manCategory" class="form-control" value="Tasks" required>
                     </div>
                     <div class="form-group">
-                        <label>Topics (Separate with commas)</label>
-                        <textarea id="manTopics" class="form-control" placeholder="Electrostatics, Current Electricity..." required></textarea>
+                        <label>Action Items (Separate with commas)</label>
+                        <textarea id="manTopics" class="form-control" placeholder="Update ledger, Deploy code..." required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="padding: 0.8rem; width: 100%;">Generate Tile</button>
+                    <button type="submit" class="btn btn-primary gradient-bg" style="padding: 0.8rem; width: 100%;">Generate Ledger</button>
                 </form>
             </div>
 
             <div class="tab-content" id="tab-ai">
                 <div class="ai-prompt-box">
                     <strong>1. Copy this prompt to AI:</strong><br><br>
-                    "Convert my syllabus into a JSON array of objects. Format: <code>name</code> (Exam), <code>date</code> (YYYY-MM-DD), <code>marks</code>, and <code>subjects</code> array. Inside subjects: <code>name</code> and <code>categories</code> array. Inside categories: <code>name</code> and <code>topics</code> array of strings. Output raw JSON only."
+                    "Convert my tasklist into a JSON array of objects. Format: <code>name</code> (Matrix Name), <code>date</code> (YYYY-MM-DD), <code>marks</code>, and <code>subjects</code> array. Inside subjects: <code>name</code> and <code>categories</code> array. Inside categories: <code>name</code> and <code>topics</code> array of strings. Output raw JSON only."
                 </div>
                 <div class="form-group">
                     <label>2. Paste AI JSON Here:</label>
-                    <textarea id="aiJsonInput" class="form-control" placeholder='[{"name": "PT-02", "date": "2026-07-20", ...}]'></textarea>
+                    <textarea id="aiJsonInput" class="form-control" placeholder='[{"name": "Target Alpha", "date": "2026-07-20", ...}]'></textarea>
                 </div>
-                <button id="processAiJson" class="btn btn-primary" style="padding: 0.8rem; width: 100%;">Sync AI Data</button>
+                <button id="processAiJson" class="btn btn-primary gradient-bg" style="padding: 0.8rem; width: 100%;">Sync AI Data</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Edit Ledger Info</h3>
+                <button class="close-btn" id="closeEditModal">&times;</button>
+            </div>
+            <div style="padding: 1.5rem;">
+                <form id="editExamForm">
+                    <input type="hidden" id="editExamId">
+                    <div class="form-group">
+                        <label>Matrix Name</label>
+                        <input type="text" id="editExamName" class="form-control" required>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Date (e.g., 2026-07-20)</label>
+                            <input type="text" id="editExamDate" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Identifier/Marks</label>
+                            <input type="text" id="editExamMarks" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label style="display: flex; justify-content: space-between;">
+                            <span>Task Content</span>
+                            <span style="font-size: 0.7rem; color: var(--accent-blue);">[Domain] ➔ Category: Task, Task</span>
+                        </label>
+                        <textarea id="editExamSyllabus" class="form-control code-textarea" style="min-height: 160px;"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary gradient-bg" style="padding: 0.8rem; width: 100%;">Save Changes</button>
+                </form>
             </div>
         </div>
     </div>
@@ -372,7 +483,6 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        // IMPORTED: setPersistence & browserLocalPersistence
         import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
@@ -395,8 +505,6 @@
             app = initializeApp(firebaseConfig);
             auth = getAuth(app);
             db = getFirestore(app);
-            
-            // STRICT PERSISTENCE OVERRIDE: Forces browser to remember login
             setPersistence(auth, browserLocalPersistence).catch(console.error);
         }
 
@@ -415,12 +523,143 @@
             "Psychology": "var(--subj-psychology)", "English": "var(--subj-english)"
         };
 
-        function showToast(message, isError = false) {
+        function showToast(message) {
             const toast = document.getElementById('toastAlert');
             toast.textContent = message;
-            toast.className = `toast show ${isError ? 'error' : ''}`;
-            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
         }
+
+        // ==========================================
+        // THEME SWITCHER
+        // ==========================================
+        const themeSelect = document.getElementById('themeSwitcher');
+        const savedTheme = localStorage.getItem('app_theme') || 'default';
+        if(savedTheme !== 'default') document.body.classList.add(savedTheme);
+        themeSelect.value = savedTheme;
+
+        themeSelect.addEventListener('change', (e) => {
+            const selectedTheme = e.target.value;
+            document.body.className = ''; 
+            if (selectedTheme !== 'default') document.body.classList.add(selectedTheme);
+            localStorage.setItem('app_theme', selectedTheme);
+        });
+
+        // ==========================================
+        // POMODORO TOGGLE ENGINE
+        // ==========================================
+        const btnTogglePomodoro = document.getElementById('btnTogglePomodoro');
+        const dashSection = document.getElementById('dashboardSection');
+        const pomoSection = document.getElementById('pomodoroSection');
+        let isPomodoroActive = false;
+
+        btnTogglePomodoro.addEventListener('click', () => {
+            isPomodoroActive = !isPomodoroActive;
+            if(isPomodoroActive) {
+                dashSection.classList.add('hidden-section');
+                pomoSection.classList.remove('hidden-section');
+                btnTogglePomodoro.innerHTML = "📋"; 
+                btnTogglePomodoro.title = "Go to Dashboard";
+            } else {
+                pomoSection.classList.add('hidden-section');
+                dashSection.classList.remove('hidden-section');
+                btnTogglePomodoro.innerHTML = "⏱"; 
+                btnTogglePomodoro.title = "Go to Focus Room";
+            }
+        });
+
+        // ==========================================
+        // CUSTOM POMODORO TIMERS
+        // ==========================================
+        let pomoSettings = JSON.parse(localStorage.getItem('pomo_settings')) || { focus: 25, short: 5, long: 15 };
+        
+        const btnPomoSettingsToggle = document.getElementById('btnPomoSettingsToggle');
+        const pomoSettingsPanel = document.getElementById('pomoSettingsPanel');
+        const setPomoFocus = document.getElementById('setPomoFocus');
+        const setPomoShort = document.getElementById('setPomoShort');
+        const setPomoLong = document.getElementById('setPomoLong');
+        const btnSavePomoSettings = document.getElementById('btnSavePomoSettings');
+
+        setPomoFocus.value = pomoSettings.focus;
+        setPomoShort.value = pomoSettings.short;
+        setPomoLong.value = pomoSettings.long;
+
+        let pomoTimer;
+        let pomoTimeLeft = pomoSettings.focus * 60; 
+        let isPomoRunning = false;
+        const displayPomo = document.getElementById('timerDisplay');
+        const btnPomoToggle = document.getElementById('btnTimerToggle');
+
+        function updatePomoDisplay() {
+            let m = Math.floor(pomoTimeLeft / 60).toString().padStart(2, '0');
+            let s = (pomoTimeLeft % 60).toString().padStart(2, '0');
+            displayPomo.textContent = `${m}:${s}`;
+        }
+        updatePomoDisplay(); 
+
+        btnPomoSettingsToggle.addEventListener('click', () => {
+            pomoSettingsPanel.classList.toggle('hidden-section');
+        });
+
+        btnSavePomoSettings.addEventListener('click', () => {
+            pomoSettings.focus = parseInt(setPomoFocus.value) || 25;
+            pomoSettings.short = parseInt(setPomoShort.value) || 5;
+            pomoSettings.long = parseInt(setPomoLong.value) || 15;
+            localStorage.setItem('pomo_settings', JSON.stringify(pomoSettings));
+
+            if (!isPomoRunning) {
+                const activeModeBtn = document.querySelector('.pomo-mode-btn.active');
+                const mode = activeModeBtn.dataset.mode;
+                pomoTimeLeft = pomoSettings[mode] * 60;
+                updatePomoDisplay();
+            }
+            
+            pomoSettingsPanel.classList.add('hidden-section');
+            showToast("Timer settings saved!");
+        });
+
+        document.querySelectorAll('.pomo-mode-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.pomo-mode-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                clearInterval(pomoTimer);
+                isPomoRunning = false;
+                btnPomoToggle.textContent = "Start";
+                
+                const mode = e.target.dataset.mode;
+                pomoTimeLeft = pomoSettings[mode] * 60;
+                updatePomoDisplay();
+            });
+        });
+
+        btnPomoToggle.addEventListener('click', () => {
+            if(isPomoRunning) {
+                clearInterval(pomoTimer);
+                btnPomoToggle.textContent = "Start";
+            } else {
+                pomoTimer = setInterval(() => {
+                    if(pomoTimeLeft > 0) {
+                        pomoTimeLeft--;
+                        updatePomoDisplay();
+                    } else {
+                        clearInterval(pomoTimer);
+                        btnPomoToggle.textContent = "Start";
+                        showToast("Focus block finished!");
+                    }
+                }, 1000);
+                btnPomoToggle.textContent = "Pause";
+            }
+            isPomoRunning = !isPomoRunning;
+        });
+
+        document.getElementById('btnTimerReset').addEventListener('click', () => {
+            clearInterval(pomoTimer);
+            isPomoRunning = false;
+            btnPomoToggle.textContent = "Start";
+            const activeMode = document.querySelector('.pomo-mode-btn.active').dataset.mode;
+            pomoTimeLeft = pomoSettings[activeMode] * 60;
+            updatePomoDisplay();
+        });
 
         // ==========================================
         // AUTH & GATEKEEPER LOGIC
@@ -436,9 +675,7 @@
                 isOfflineMode = true;
                 localStorage.setItem('offline_mode', 'true');
                 document.getElementById('userSyncStatus').textContent = "Offline Mode • Data saved locally";
-                document.getElementById('navProfileArea').innerHTML = `
-                    <button class="btn btn-outline" id="btnExitOffline">Exit Offline Mode</button>
-                `;
+                document.getElementById('navProfileArea').innerHTML = `<button class="btn btn-outline" id="btnExitOffline">Exit Offline</button>`;
                 document.getElementById('btnExitOffline').addEventListener('click', () => {
                     localStorage.removeItem('offline_mode');
                     location.reload();
@@ -452,9 +689,9 @@
         document.getElementById('btnMainGoogleLogin').addEventListener('click', () => {
             if(isFirebaseConfigured) {
                 const provider = new GoogleAuthProvider();
-                signInWithPopup(auth, provider).catch(err => showToast("Login failed", true));
+                signInWithPopup(auth, provider).catch(err => showToast("Login failed"));
             } else {
-                showToast("Firebase keys not added to code yet! Falling back to offline mode.", true);
+                showToast("Firebase keys missing! Using offline mode.");
                 setTimeout(() => openApp('offline'), 2000);
             }
         });
@@ -465,27 +702,18 @@
                     currentUser = user;
                     localStorage.removeItem('offline_mode');
                     document.getElementById('userSyncStatus').textContent = `Cloud sync active • ${user.displayName}`;
-                    
                     document.getElementById('navProfileArea').innerHTML = `
                         <span class="logout-text" id="btnNavSignOut">Sign Out</span>
-                        <img src="${user.photoURL}" class="profile-pic" title="${user.email}" alt="Profile">
+                        <img src="${user.photoURL}" class="profile-pic" title="${user.email}">
                     `;
                     document.getElementById('btnNavSignOut').addEventListener('click', () => signOut(auth));
-                    
-                    // Pull from cloud
                     await pullDataFromCloud(user.uid);
-                    
-                    // Show the app and literally draw the tiles on the screen!
                     openApp('cloud');
-                    renderDashboardStructure(); 
+                    renderDashboardStructure();
                 } else {
                     currentUser = null;
-                    if(localStorage.getItem('offline_mode') === 'true') {
-                        openApp('offline');
-                    } else {
-                        authScreen.classList.remove('hidden');
-                        appContainer.classList.remove('visible');
-                    }
+                    if(localStorage.getItem('offline_mode') === 'true') openApp('offline');
+                    else { authScreen.classList.remove('hidden'); appContainer.classList.remove('visible'); }
                 }
             });
         } else {
@@ -493,12 +721,11 @@
         }
 
         // ==========================================
-        // CLOUD SYNC ENGINE
+        // CLOUD DATA SYNC
         // ==========================================
         async function syncData() {
             localStorage.setItem('dynamic_syllabus_data', JSON.stringify(currentSyllabusData));
             localStorage.setItem('local_completed_tasks', JSON.stringify(completedTasksArray));
-            
             if (currentUser && isFirebaseConfigured) {
                 try {
                     await setDoc(doc(db, "users", currentUser.uid), {
@@ -517,38 +744,26 @@
                     const data = userDoc.data();
                     if(data.completedTasks) completedTasksArray = data.completedTasks;
                     if(data.customSyllabus) currentSyllabusData = data.customSyllabus;
-                    
                     localStorage.setItem('dynamic_syllabus_data', JSON.stringify(currentSyllabusData));
                     localStorage.setItem('local_completed_tasks', JSON.stringify(completedTasksArray));
                 }
-            } catch (e) { console.error("Cloud Pull Error", e); }
+            } catch (e) {}
         }
 
         // ==========================================
-        // UI & RENDER LOGIC
+        // RENDER METHOD ARCHITECTURE
         // ==========================================
-        
         function autoPatchLegacyIds() {
-            let needsPatching = false;
-            currentSyllabusData.forEach((exam, index) => {
-                if (!exam.id) {
-                    exam.id = `legacy-exam-${Date.now()}-${index}`;
-                    needsPatching = true;
-                }
-            });
-            if (needsPatching) {
-                localStorage.setItem('dynamic_syllabus_data', JSON.stringify(currentSyllabusData));
-            }
+            let patched = false;
+            currentSyllabusData.forEach((ex, i) => { if (!ex.id) { ex.id = `legacy-${Date.now()}-${i}`; patched = true; }});
+            if (patched) localStorage.setItem('dynamic_syllabus_data', JSON.stringify(currentSyllabusData));
         }
 
         function formatCircleDate(dateString) {
             if(!dateString || dateString === "No Date") return `<span style="font-size:1.2rem;">📌</span>`;
-            
             const d = new Date(dateString);
             if (!isNaN(d.getTime())) {
-                const day = d.getDate();
-                const month = d.toLocaleString('default', { month: 'short' }).toUpperCase();
-                return `<span style="font-size: 1.1rem; font-weight: 700;">${day}</span><span style="font-size: 0.65rem; font-weight: 600; color: var(--accent-blue);">${month}</span>`;
+                return `<span style="font-size: 1.1rem; font-weight: 700;">${d.getDate()}</span><span style="font-size: 0.65rem; font-weight: 600; color: var(--accent-blue);">${d.toLocaleString('default', { month: 'short' }).toUpperCase()}</span>`;
             }
             return `<span style="font-size: 0.9rem; font-weight: 700;">${dateString.substring(0,2)}</span>`;
         }
@@ -556,17 +771,10 @@
         function renderDashboardStructure() {
             const container = document.getElementById('timelineContainer');
             container.innerHTML = '';
-
             autoPatchLegacyIds();
 
             if (currentSyllabusData.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5; margin-bottom: 1rem;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                        <h3>Your Workspace is Empty</h3>
-                        <p>Click "Add Syllabus" above to start building your dashboard.</p>
-                    </div>
-                `;
+                container.innerHTML = `<div class="empty-state"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.5; margin-bottom:1rem;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg><h3>Workspace is Empty</h3><p>Click "Add Syllabus" above to start.</p></div>`;
                 updateMetrics();
                 return;
             }
@@ -574,10 +782,7 @@
             currentSyllabusData.sort((a,b) => new Date(a.date) - new Date(b.date));
 
             currentSyllabusData.forEach(exam => {
-                const subTags = exam.subjects.map(s => {
-                    const color = subjectColors[s.name] || '#8b5cf6';
-                    return `<span class="subj-tag" style="background:${color}15; color:${color}; border:1px solid ${color}30">${s.name}</span>`;
-                }).join('');
+                const subTags = exam.subjects.map(s => `<span class="subj-tag" style="background:${subjectColors[s.name]||'#8b5cf6'}15; color:${subjectColors[s.name]||'#8b5cf6'}; border:1px solid ${subjectColors[s.name]||'#8b5cf6'}30">${s.name}</span>`).join('');
 
                 let syllabusHtml = '';
                 exam.subjects.forEach(sub => {
@@ -587,22 +792,11 @@
                         cat.topics.forEach(topic => {
                             const uniqueId = `${exam.id}_${sub.name}_${cat.name}_${topic}`.toLowerCase().replace(/[^a-z0-9]/g, '_');
                             const isChecked = completedTasksArray.includes(uniqueId) ? 'checked' : '';
-                            topicsHtml += `
-                                <label class="topic-item">
-                                    <input type="checkbox" data-uid="${uniqueId}" ${isChecked}>
-                                    <span class="topic-label">${topic}</span>
-                                </label>
-                            `;
+                            topicsHtml += `<label class="topic-item"><input type="checkbox" data-uid="${uniqueId}" ${isChecked}><span class="topic-label">${topic}</span></label>`;
                         });
                         blocks += `<div><div class="category-title">${cat.name}</div>${topicsHtml}</div>`;
                     });
-
-                    syllabusHtml += `
-                        <div class="subject-block">
-                            <h4 style="color:${subjectColors[sub.name] || '#FFF'}">${sub.name}</h4>
-                            ${blocks}
-                        </div>
-                    `;
+                    syllabusHtml += `<div class="subject-block"><h4 style="color:${subjectColors[sub.name]||'#FFF'}">${sub.name}</h4>${blocks}</div>`;
                 });
 
                 const wrapper = `
@@ -612,12 +806,15 @@
                             <div class="exam-header">
                                 <div>
                                     <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.2rem;">${exam.date}</div>
-                                    <div class="exam-info"><h3>${exam.name} <span class="exam-marks">${exam.marks || '-'} MARKS</span></h3></div>
+                                    <div class="exam-info"><h3>${exam.name} <span class="exam-marks">${exam.marks || '-'}</span></h3></div>
                                     <div class="exam-subjects-tags">${subTags}</div>
                                 </div>
                                 <div class="header-actions">
-                                    <button class="icon-btn delete-btn" data-exam-id="${exam.id}" title="Delete Exam">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    <button class="icon-btn edit-btn" data-exam-id="${exam.id}" title="Edit Ledger Info">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    </button>
+                                    <button class="icon-btn delete-btn" data-exam-id="${exam.id}" title="Delete Ledger">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                                     </button>
                                     <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                 </div>
@@ -628,41 +825,35 @@
                 `;
                 container.insertAdjacentHTML('beforeend', wrapper);
             });
-
             updateMetrics();
         }
 
         function updateMetrics() {
-            const totalExams = currentSyllabusData.length;
-            document.getElementById('statTaskFraction').textContent = totalExams;
-
-            const totalBoxes = document.querySelectorAll('.topic-item input[type="checkbox"]');
-            const totalCount = totalBoxes.length;
-            let checkCount = 0;
-            totalBoxes.forEach(box => { if(box.checked) checkCount++; });
-
-            const percent = totalCount === 0 ? 0 : Math.round((checkCount / totalCount) * 100);
-            document.getElementById('statPercent').textContent = `${percent}%`;
+            document.getElementById('statTaskFraction').textContent = currentSyllabusData.length;
+            const boxes = document.querySelectorAll('.topic-item input[type="checkbox"]');
+            let checks = 0; boxes.forEach(b => { if(b.checked) checks++; });
+            document.getElementById('statPercent').textContent = boxes.length === 0 ? "0%" : `${Math.round((checks/boxes.length)*100)}%`;
 
             if(currentSyllabusData.length > 0) {
-                const now = new Date();
-                const upcoming = currentSyllabusData.find(e => new Date(e.date) >= now) || currentSyllabusData[0];
-                
+                const upcoming = currentSyllabusData.find(e => new Date(e.date) >= new Date()) || currentSyllabusData[0];
                 document.getElementById('statNextExam').textContent = upcoming.name;
                 document.getElementById('statCountdown').textContent = `Target: ${upcoming.date}`;
             } else {
                 document.getElementById('statNextExam').textContent = "--";
-                document.getElementById('statCountdown').textContent = "No upcoming exams";
+                document.getElementById('statCountdown').textContent = "No pending tasks";
             }
         }
 
         // ==========================================
-        // COMMAND CENTER & EVENT LISTENERS
+        // EVENT ROUTING & TRIGGERS
         // ==========================================
-        const modal = document.getElementById('commandModal');
-        document.getElementById('openCommandCenter').addEventListener('click', () => modal.classList.add('active'));
-        document.getElementById('closeModal').addEventListener('click', () => modal.classList.remove('active'));
-        
+        const cmdModal = document.getElementById('commandModal');
+        document.getElementById('openCommandCenter').addEventListener('click', () => cmdModal.classList.add('active'));
+        document.getElementById('closeModal').addEventListener('click', () => cmdModal.classList.remove('active'));
+
+        const editModal = document.getElementById('editModal');
+        document.getElementById('closeEditModal').addEventListener('click', () => editModal.classList.remove('active'));
+
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -672,89 +863,129 @@
             });
         });
 
+        // Add Manual Submission
         document.getElementById('manualAddForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const examName = document.getElementById('manExam').value.trim();
-            const examDate = document.getElementById('manDate').value.trim();
-            const subjectName = document.getElementById('manSubject').value;
-            const categoryName = document.getElementById('manCategory').value.trim();
-            const topicsRaw = document.getElementById('manTopics').value;
-            const topicsArray = topicsRaw.split(',').map(t => t.trim()).filter(t => t !== '');
-
-            let exam = currentSyllabusData.find(e => e.name.toLowerCase() === examName.toLowerCase());
+            const exName = document.getElementById('manExam').value.trim();
+            let exam = currentSyllabusData.find(e => e.name.toLowerCase() === exName.toLowerCase());
+            if(!exam) { exam = { id: `exam-${Date.now()}`, name: exName, date: document.getElementById('manDate').value.trim(), marks: "-", subjects: [] }; currentSyllabusData.push(exam); }
             
-            if(!exam) { 
-                exam = { id: `exam-${Date.now()}`, name: examName, date: examDate, marks: "-", subjects: [] }; 
-                currentSyllabusData.push(exam); 
-            }
+            const subName = document.getElementById('manSubject').value;
+            let sub = exam.subjects.find(s => s.name === subName);
+            if(!sub) { sub = { name: subName, categories: [] }; exam.subjects.push(sub); }
             
-            let subject = exam.subjects.find(s => s.name === subjectName);
-            if(!subject) { subject = { name: subjectName, categories: [] }; exam.subjects.push(subject); }
+            const catName = document.getElementById('manCategory').value.trim();
+            let cat = sub.categories.find(c => c.name === catName);
+            if(!cat) { cat = { name: catName, topics: [] }; sub.categories.push(cat); }
             
-            let category = subject.categories.find(c => c.name === categoryName);
-            if(!category) { category = { name: categoryName, topics: [] }; subject.categories.push(category); }
-            
-            category.topics = [...new Set([...category.topics, ...topicsArray])];
+            const tops = document.getElementById('manTopics').value.split(',').map(t=>t.trim()).filter(t=>t!=='');
+            cat.topics = [...new Set([...cat.topics, ...tops])];
 
             await syncData();
-            showToast("Tile successfully generated!");
-            modal.classList.remove('active');
-            document.getElementById('manualAddForm').reset();
+            showToast("Ledger Generated!");
+            cmdModal.classList.remove('active');
+            e.target.reset();
         });
 
+        // AI Block Sync
         document.getElementById('processAiJson').addEventListener('click', async () => {
-            const rawJson = document.getElementById('aiJsonInput').value.trim();
-            if(!rawJson) return showToast("Paste JSON first.", true);
             try {
-                const cleanedJson = rawJson.replace(/```json/g, '').replace(/```/g, '').trim();
-                const parsedData = JSON.parse(cleanedJson);
-                if(!Array.isArray(parsedData)) throw new Error("Must be array");
-                
-                parsedData.forEach((ex, i) => {
-                    if(!ex.id) ex.id = `exam-ai-${Date.now()}-${i}`;
-                });
-                
-                currentSyllabusData = [...currentSyllabusData, ...parsedData];
+                const j = JSON.parse(document.getElementById('aiJsonInput').value.replace(/```json/g, '').replace(/```/g, '').trim());
+                j.forEach((ex, i) => { if(!ex.id) ex.id = `exam-ai-${Date.now()}-${i}`; });
+                currentSyllabusData = [...currentSyllabusData, ...j];
                 await syncData();
                 showToast("AI Sync Complete!");
-                modal.classList.remove('active');
+                cmdModal.classList.remove('active');
                 document.getElementById('aiJsonInput').value = '';
-            } catch (err) { showToast("Invalid JSON format.", true); }
+            } catch (err) { showToast("Invalid JSON"); }
         });
 
-        document.getElementById('timelineContainer').addEventListener('click', async (e) => {
-            const deleteBtn = e.target.closest('.delete-btn');
-            if (deleteBtn) {
-                e.stopPropagation();
-                if (confirm("Are you sure you want to completely remove this exam tile?")) {
-                    const examId = deleteBtn.getAttribute('data-exam-id');
-                    
-                    const previousLength = currentSyllabusData.length;
-                    currentSyllabusData = currentSyllabusData.filter(ex => String(ex.id) !== String(examId));
-                    
-                    if(currentSyllabusData.length !== previousLength) {
-                        await syncData();
-                        showToast("Exam removed successfully.");
-                    } else {
-                        showToast("Error locating exam ID.", true);
+        // Edit Component Submission
+        document.getElementById('editExamForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const eId = document.getElementById('editExamId').value;
+            const targetExam = currentSyllabusData.find(ex => String(ex.id) === String(eId));
+            
+            if(targetExam) {
+                targetExam.name = document.getElementById('editExamName').value;
+                targetExam.date = document.getElementById('editExamDate').value;
+                targetExam.marks = document.getElementById('editExamMarks').value;
+                
+                const rawText = document.getElementById('editExamSyllabus').value;
+                let parsedSubjects = [];
+                let currentSub = null;
+
+                rawText.split('\n').forEach(line => {
+                    let tLine = line.trim();
+                    if (!tLine) return;
+                    if (tLine.startsWith('[') && tLine.endsWith(']')) {
+                        currentSub = { name: tLine.slice(1, -1).trim(), categories: [] };
+                        parsedSubjects.push(currentSub);
+                    } else if (currentSub && tLine.includes(':')) {
+                        const parts = tLine.split(':');
+                        const catName = parts[0].trim();
+                        const tops = parts.slice(1).join(':').split(',').map(t => t.trim()).filter(t => t !== '');
+                        if(tops.length > 0) currentSub.categories.push({ name: catName, topics: tops });
                     }
+                });
+
+                targetExam.subjects = parsedSubjects.filter(sub => sub.categories.length > 0);
+
+                await syncData();
+                showToast("Ledger Updated!");
+                editModal.classList.remove('active');
+            }
+        });
+
+        // Main Matrix Delegations
+        document.getElementById('timelineContainer').addEventListener('click', async (e) => {
+            const delBtn = e.target.closest('.delete-btn');
+            if (delBtn) {
+                e.stopPropagation();
+                if (confirm("Remove this task ledger completely?")) {
+                    currentSyllabusData = currentSyllabusData.filter(ex => String(ex.id) !== String(delBtn.dataset.examId));
+                    await syncData();
+                    showToast("Ledger Removed.");
+                }
+                return;
+            }
+
+            const editBtn = e.target.closest('.edit-btn');
+            if (editBtn) {
+                e.stopPropagation();
+                const exam = currentSyllabusData.find(ex => String(ex.id) === String(editBtn.dataset.examId));
+                if(exam) {
+                    document.getElementById('editExamId').value = exam.id;
+                    document.getElementById('editExamName').value = exam.name;
+                    document.getElementById('editExamDate').value = exam.date;
+                    document.getElementById('editExamMarks').value = exam.marks === '-' ? '' : exam.marks;
+                    
+                    let syllabusText = "";
+                    exam.subjects.forEach(sub => {
+                        syllabusText += `[${sub.name}]\n`;
+                        sub.categories.forEach(cat => {
+                            syllabusText += `${cat.name}: ${cat.topics.join(', ')}\n`;
+                        });
+                        syllabusText += "\n";
+                    });
+                    
+                    document.getElementById('editExamSyllabus').value = syllabusText.trim();
+                    editModal.classList.add('active');
                 }
                 return;
             }
 
             const header = e.target.closest('.exam-header');
-            if(header && !e.target.closest('.topic-item')) {
-                header.closest('.exam-card').classList.toggle('expanded');
-            }
+            if(header && !e.target.closest('.topic-item')) header.closest('.exam-card').classList.toggle('expanded');
         });
 
+        // Metric Checkboxes Tracking
         document.getElementById('timelineContainer').addEventListener('change', async (e) => {
             if(e.target.type === 'checkbox') {
-                const uid = e.target.dataset.uid;
                 if(e.target.checked) {
-                    if(!completedTasksArray.includes(uid)) completedTasksArray.push(uid);
+                    if(!completedTasksArray.includes(e.target.dataset.uid)) completedTasksArray.push(e.target.dataset.uid);
                 } else {
-                    completedTasksArray = completedTasksArray.filter(i => i !== uid);
+                    completedTasksArray = completedTasksArray.filter(i => i !== e.target.dataset.uid);
                 }
                 updateMetrics();
                 await syncData();
