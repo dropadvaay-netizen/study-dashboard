@@ -82,6 +82,34 @@
         .hidden-section { display: none !important; }
 
         /* =========================================================
+           TUITION TEACHER MODE (READ-ONLY OVERRIDES)
+           ========================================================= */
+        body.teacher-mode-active .edit-btn,
+        body.teacher-mode-active .delete-btn,
+        body.teacher-mode-active #openCommandCenter,
+        body.teacher-mode-active #btnShareModal {
+            display: none !important;
+        }
+        body.teacher-mode-active .topic-item {
+            cursor: not-allowed;
+        }
+        body.teacher-mode-active .topic-item input[type="checkbox"] {
+            cursor: not-allowed;
+        }
+        body.teacher-mode-active .hero-title h2::after {
+            content: " - Tuition Teacher Mode";
+            font-size: 1.2rem;
+            color: #f59e0b;
+            vertical-align: middle;
+            margin-left: 10px;
+            font-style: italic;
+            background: rgba(245, 158, 11, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        /* =========================================================
            AUTH GATEKEEPER
            ========================================================= */
         #authScreen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--bg-color); z-index: 9999; display: flex; justify-content: center; align-items: center; transition: var(--transition-smooth); backdrop-filter: blur(20px); }
@@ -92,6 +120,7 @@
         #btnMainGoogleLogin { width: 100%; padding: 0.9rem; margin-bottom: 12px; justify-content: center; }
         .offline-btn { background: transparent; border: none; color: var(--text-secondary); margin-top: 0.5rem; cursor: pointer; font-size: 0.85rem; text-decoration: underline; transition: 0.2s; padding: 0.5rem; }
         .offline-btn:hover { color: white; }
+        .engineered-text { font-size: 0.75rem; color: var(--text-secondary); opacity: 0.6; margin-top: 1.5rem; margin-bottom: 0; font-style: italic; }
 
         /* App Container */
         #appContainer { opacity: 0; transition: opacity 0.5s ease; pointer-events: none; flex: 1; display: flex; flex-direction: column; width: 100%; }
@@ -120,7 +149,7 @@
         .logout-text { font-size: 0.8rem; color: #ef4444; cursor: pointer; display: none; font-weight: 600; }
         .user-profile-container:hover .logout-text { display: block; }
 
-        /* Floating Action Button for Pomodoro Toggle with dynamic variables */
+        /* Floating Action Button for Pomodoro Toggle */
         .floating-pomo-btn {
             position: fixed;
             bottom: 30px;
@@ -281,6 +310,7 @@
             <p>Sign in to sync your progress across devices, or keep it local.</p>
             <button id="btnMainGoogleLogin" class="btn btn-primary gradient-bg">Sign in with Google</button>
             <button id="btnOfflineMode" class="offline-btn">Use it offline</button>
+            <p class="engineered-text">engineered by advaay</p>
         </div>
     </div>
 
@@ -295,6 +325,9 @@
                         <option value="theme-emerald">🌲 Emerald Green</option>
                         <option value="theme-midnight">🌌 Midnight Indigo</option>
                     </select>
+
+                    <!-- SHARE BUTTON -->
+                    <button class="btn btn-outline" id="btnShareModal" style="border-color: #10b981; color: #10b981;">🔗 Share</button>
 
                     <button class="btn" id="openCommandCenter" style="border-color: var(--accent-purple);">✨ Add Syllabus</button>
                     
@@ -377,6 +410,23 @@
         </div>
 
         <footer class="app-footer">--engineered by advaay</footer>
+    </div>
+
+    <!-- SHARE MODAL -->
+    <div class="modal-overlay" id="shareModal">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3>Share Your Matrix</h3>
+                <button class="close-btn" id="closeShareModal">&times;</button>
+            </div>
+            <div style="padding: 1.5rem; text-align: center;">
+                <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1.5rem;">Generate a read-only "Tuition Teacher" link. Anyone with this link can view your syllabus and completion status, but they cannot edit or tick boxes.</p>
+                
+                <button id="btnGenerateShareLink" class="btn btn-primary gradient-bg" style="width: 100%; justify-content: center; padding: 1rem; font-size: 1rem;">📋 Copy Tuition Mode Link</button>
+                
+                <input type="text" id="shareLinkOutput" class="form-control" readonly style="display: none; margin-top: 1rem; text-align: center; color: var(--accent-blue); background: rgba(59, 130, 246, 0.1);">
+            </div>
+        </div>
     </div>
 
     <div class="modal-overlay" id="commandModal">
@@ -509,12 +559,29 @@
         }
 
         // ==========================================
-        // STATE MANAGEMENT
+        // STATE MANAGEMENT & URL CHECKER
         // ==========================================
         let currentSyllabusData = JSON.parse(localStorage.getItem('dynamic_syllabus_data')) || [];
         let completedTasksArray = JSON.parse(localStorage.getItem('local_completed_tasks')) || [];
         let currentUser = null;
         let isOfflineMode = localStorage.getItem('offline_mode') === 'true';
+
+        // Check if someone clicked a share link to view this page
+        const urlParams = new URLSearchParams(window.location.search);
+        const mode = urlParams.get('mode');
+        const shareData = urlParams.get('data');
+        let isTeacherMode = (mode === 'tuition');
+
+        // If a teacher opens the link, decode the data in the URL
+        if (isTeacherMode && shareData) {
+            try {
+                const decoded = JSON.parse(decodeURIComponent(atob(shareData)));
+                currentSyllabusData = decoded.s || [];
+                completedTasksArray = decoded.c || [];
+            } catch (e) {
+                console.error("Failed to parse shared data");
+            }
+        }
 
         const subjectColors = {
             "Physics": "var(--subj-physics)", "Chemistry": "var(--subj-chemistry)",
@@ -542,7 +609,46 @@
             const selectedTheme = e.target.value;
             document.body.className = ''; 
             if (selectedTheme !== 'default') document.body.classList.add(selectedTheme);
+            if (isTeacherMode) document.body.classList.add('teacher-mode-active'); // ensure mode stays active
             localStorage.setItem('app_theme', selectedTheme);
+        });
+
+        // ==========================================
+        // SHARE MODAL ENGINE
+        // ==========================================
+        const shareModal = document.getElementById('shareModal');
+        document.getElementById('btnShareModal').addEventListener('click', () => {
+            shareModal.classList.add('active');
+            document.getElementById('shareLinkOutput').style.display = 'none';
+        });
+        
+        document.getElementById('closeShareModal').addEventListener('click', () => {
+            shareModal.classList.remove('active');
+        });
+
+        document.getElementById('btnGenerateShareLink').addEventListener('click', () => {
+            const baseUrl = window.location.origin + window.location.pathname;
+            
+            // Compress syllabus into the URL so no backend permission rules are needed
+            const payload = JSON.stringify({ s: currentSyllabusData, c: completedTasksArray });
+            const encoded = btoa(encodeURIComponent(payload));
+            
+            const shareUrl = `${baseUrl}?mode=tuition&data=${encoded}`;
+            
+            const output = document.getElementById('shareLinkOutput');
+            output.value = shareUrl;
+            output.style.display = 'block';
+            
+            // Copy to clipboard
+            output.select();
+            document.execCommand('copy');
+            
+            const btn = document.getElementById('btnGenerateShareLink');
+            const originalText = btn.textContent;
+            btn.textContent = "✅ Link Copied!";
+            showToast("Tuition mode link copied to clipboard!");
+            
+            setTimeout(() => { btn.textContent = originalText; }, 2000);
         });
 
         // ==========================================
@@ -568,9 +674,7 @@
             }
         });
 
-        // ==========================================
         // CUSTOM POMODORO TIMERS
-        // ==========================================
         let pomoSettings = JSON.parse(localStorage.getItem('pomo_settings')) || { focus: 25, short: 5, long: 15 };
         
         const btnPomoSettingsToggle = document.getElementById('btnPomoSettingsToggle');
@@ -684,46 +788,60 @@
             }
         }
 
-        document.getElementById('btnOfflineMode').addEventListener('click', () => openApp('offline'));
+        // Check if a teacher is visiting using the share link
+        if (isTeacherMode) {
+            document.body.classList.add('teacher-mode-active');
+            authScreen.classList.add('hidden');
+            appContainer.classList.add('visible');
+            document.getElementById('userSyncStatus').textContent = "Tuition Teacher Mode • Read Only View";
+            document.getElementById('navProfileArea').innerHTML = `<span style="font-size: 0.8rem; color: #f59e0b; padding: 0.5rem 1rem; border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 20px;">👨‍🏫 Viewing Shared Matrix</span>`;
+            renderDashboardStructure();
+        } else {
+            // Normal Auth flow for the student
+            document.getElementById('btnOfflineMode').addEventListener('click', () => openApp('offline'));
 
-        document.getElementById('btnMainGoogleLogin').addEventListener('click', () => {
-            if(isFirebaseConfigured) {
-                const provider = new GoogleAuthProvider();
-                signInWithPopup(auth, provider).catch(err => showToast("Login failed"));
-            } else {
-                showToast("Firebase keys missing! Using offline mode.");
-                setTimeout(() => openApp('offline'), 2000);
-            }
-        });
-
-        if(isFirebaseConfigured) {
-            onAuthStateChanged(auth, async (user) => {
-                if (user) {
-                    currentUser = user;
-                    localStorage.removeItem('offline_mode');
-                    document.getElementById('userSyncStatus').textContent = `Cloud sync active • ${user.displayName}`;
-                    document.getElementById('navProfileArea').innerHTML = `
-                        <span class="logout-text" id="btnNavSignOut">Sign Out</span>
-                        <img src="${user.photoURL}" class="profile-pic" title="${user.email}">
-                    `;
-                    document.getElementById('btnNavSignOut').addEventListener('click', () => signOut(auth));
-                    await pullDataFromCloud(user.uid);
-                    openApp('cloud');
-                    renderDashboardStructure();
+            document.getElementById('btnMainGoogleLogin').addEventListener('click', () => {
+                if(isFirebaseConfigured) {
+                    const provider = new GoogleAuthProvider();
+                    signInWithPopup(auth, provider).catch(err => showToast("Login failed"));
                 } else {
-                    currentUser = null;
-                    if(localStorage.getItem('offline_mode') === 'true') openApp('offline');
-                    else { authScreen.classList.remove('hidden'); appContainer.classList.remove('visible'); }
+                    showToast("Firebase keys missing! Using offline mode.");
+                    setTimeout(() => openApp('offline'), 2000);
                 }
             });
-        } else {
-            if(isOfflineMode) openApp('offline');
+
+            if(isFirebaseConfigured) {
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        currentUser = user;
+                        localStorage.removeItem('offline_mode');
+                        document.getElementById('userSyncStatus').textContent = `Cloud sync active • ${user.displayName}`;
+                        document.getElementById('navProfileArea').innerHTML = `
+                            <span class="logout-text" id="btnNavSignOut">Sign Out</span>
+                            <img src="${user.photoURL}" class="profile-pic" title="${user.email}">
+                        `;
+                        document.getElementById('btnNavSignOut').addEventListener('click', () => signOut(auth));
+                        await pullDataFromCloud(user.uid);
+                        openApp('cloud');
+                        renderDashboardStructure();
+                    } else {
+                        currentUser = null;
+                        if(localStorage.getItem('offline_mode') === 'true') openApp('offline');
+                        else { authScreen.classList.remove('hidden'); appContainer.classList.remove('visible'); }
+                    }
+                });
+            } else {
+                if(isOfflineMode) openApp('offline');
+            }
         }
 
         // ==========================================
         // CLOUD DATA SYNC
         // ==========================================
-        async function syncData() {
+        // Skip rendering to prevent checkboxes from collapsing
+        async function syncData(skipRender = false) {
+            if (isTeacherMode) return; // Never sync data back if in teacher mode
+
             localStorage.setItem('dynamic_syllabus_data', JSON.stringify(currentSyllabusData));
             localStorage.setItem('local_completed_tasks', JSON.stringify(completedTasksArray));
             if (currentUser && isFirebaseConfigured) {
@@ -734,7 +852,10 @@
                     }, { merge: true });
                 } catch (e) { console.error("Cloud Save Error", e); }
             }
-            renderDashboardStructure();
+            
+            if (!skipRender) {
+                renderDashboardStructure();
+            }
         }
 
         async function pullDataFromCloud(uid) {
@@ -792,7 +913,9 @@
                         cat.topics.forEach(topic => {
                             const uniqueId = `${exam.id}_${sub.name}_${cat.name}_${topic}`.toLowerCase().replace(/[^a-z0-9]/g, '_');
                             const isChecked = completedTasksArray.includes(uniqueId) ? 'checked' : '';
-                            topicsHtml += `<label class="topic-item"><input type="checkbox" data-uid="${uniqueId}" ${isChecked}><span class="topic-label">${topic}</span></label>`;
+                            const isDisabled = isTeacherMode ? 'disabled' : ''; // Disable checkbox in Teacher Mode
+                            
+                            topicsHtml += `<label class="topic-item"><input type="checkbox" data-uid="${uniqueId}" ${isChecked} ${isDisabled}><span class="topic-label">${topic}</span></label>`;
                         });
                         blocks += `<div><div class="category-title">${cat.name}</div>${topicsHtml}</div>`;
                     });
@@ -939,8 +1062,10 @@
 
         // Main Matrix Delegations
         document.getElementById('timelineContainer').addEventListener('click', async (e) => {
+            
             const delBtn = e.target.closest('.delete-btn');
             if (delBtn) {
+                if (isTeacherMode) return; // Block deletion in teacher mode
                 e.stopPropagation();
                 if (confirm("Remove this task ledger completely?")) {
                     currentSyllabusData = currentSyllabusData.filter(ex => String(ex.id) !== String(delBtn.dataset.examId));
@@ -952,6 +1077,7 @@
 
             const editBtn = e.target.closest('.edit-btn');
             if (editBtn) {
+                if (isTeacherMode) return; // Block editing in teacher mode
                 e.stopPropagation();
                 const exam = currentSyllabusData.find(ex => String(ex.id) === String(editBtn.dataset.examId));
                 if(exam) {
@@ -975,12 +1101,15 @@
                 return;
             }
 
+            // Always allow toggling the exam card, even in teacher mode!
             const header = e.target.closest('.exam-header');
             if(header && !e.target.closest('.topic-item')) header.closest('.exam-card').classList.toggle('expanded');
         });
 
         // Metric Checkboxes Tracking
         document.getElementById('timelineContainer').addEventListener('change', async (e) => {
+            if (isTeacherMode) return; // Prevent any accidental edits
+
             if(e.target.type === 'checkbox') {
                 if(e.target.checked) {
                     if(!completedTasksArray.includes(e.target.dataset.uid)) completedTasksArray.push(e.target.dataset.uid);
@@ -988,7 +1117,9 @@
                     completedTasksArray = completedTasksArray.filter(i => i !== e.target.dataset.uid);
                 }
                 updateMetrics();
-                await syncData();
+                
+                // Pass true to skip re-rendering the whole UI on checkbox click
+                await syncData(true);
             }
         });
 
