@@ -421,7 +421,7 @@
         import { getFirestore, doc, setDoc, getDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // ==========================================
-        // 🔑 DROP YOUR FIREBASE CONFIG HERE
+        // 🔑 YOUR FIREBASE CONFIG IS HERE
         // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyD4uByirnWbRPfP0c8LUNj7nP_Ghi34_cg",
@@ -429,9 +429,10 @@
             projectId: "todlist-ed420",
             storageBucket: "todlist-ed420.firebasestorage.app",
             messagingSenderId: "875185856689",
-            appId: "1:875185856689:web:0273fe60cc892255290290",
-            measurementId: "G-5NHE3YDSG6"
+            appId: "1:875185856689:web:02ade4cb6f0b4cfc290290",
+            measurementId: "G-GFJQSNM3LX"
         };
+
         const isFirebaseConfigured = firebaseConfig.apiKey !== "YOUR_API_KEY";
         let app, auth, db;
         if(isFirebaseConfigured) {
@@ -479,7 +480,6 @@
             appContainer.classList.add('visible');
             document.getElementById('userSyncStatus').textContent = "Loading Shared Matrix...";
             
-            // Fetch the short link data from Firebase
             async function loadSharedData() {
                 try {
                     const docSnap = await getDoc(doc(db, "shared_matrices", shareId));
@@ -500,7 +500,6 @@
             }
             loadSharedData();
         } else {
-            // Normal Student Auth Flow
             function openApp(mode) {
                 authScreen.classList.add('hidden');
                 appContainer.classList.add('visible');
@@ -522,7 +521,10 @@
             document.getElementById('btnMainGoogleLogin').addEventListener('click', () => {
                 if(isFirebaseConfigured) {
                     const provider = new GoogleAuthProvider();
-                    signInWithPopup(auth, provider).catch(err => showToast("Login failed"));
+                    signInWithPopup(auth, provider).catch(err => {
+                        console.error("Google Auth Error:", err);
+                        showToast(`Login failed: ${err.message}`);
+                    });
                 } else {
                     showToast("Firebase keys missing! Using offline mode.");
                     setTimeout(() => openApp('offline'), 2000);
@@ -568,7 +570,7 @@
         });
 
         document.getElementById('btnGenerateShareLink').addEventListener('click', async () => {
-            if (!currentUser || !isFirebaseConfigured) {
+            if (!currentUser && !isOfflineMode) {
                 showToast("You must be logged in to generate a share link!");
                 return;
             }
@@ -579,14 +581,12 @@
             btn.disabled = true;
 
             try {
-                // Save the snapshot to Firebase
                 const docRef = await addDoc(collection(db, "shared_matrices"), {
                     s: currentSyllabusData,
                     c: completedTasksArray,
                     createdAt: new Date().toISOString()
                 });
 
-                // Generate clean short URL
                 const baseUrl = window.location.origin + window.location.pathname;
                 const shareUrl = `${baseUrl}?share=${docRef.id}`;
                 
@@ -594,7 +594,6 @@
                 output.value = shareUrl;
                 output.style.display = 'block';
                 
-                // Copy to clipboard
                 output.select();
                 document.execCommand('copy');
                 
@@ -1009,19 +1008,10 @@
                     completedTasksArray = completedTasksArray.filter(i => i !== e.target.dataset.uid);
                 }
                 updateMetrics();
-                await syncData(true);That is a classic trap. Browsers and servers usually tap out when a URL hits around 2,000 characters. If you are stuffing a bunch of raw text, code, or JSON directly into the URL, it is going to break quickly. 
+                await syncData(true);
+            }
+        });
 
-To fix this, you have to change how you are handling the data. Here are the three best ways to solve the "massive link" problem, ranging from the easiest frontend fix to the most robust backend solution.
-
-### 1. Compress the Data (Frontend Only - Easiest)
-If you want to keep the app completely frontend without setting up a database, you can compress the data before putting it in the URL. A popular library for this is **`lz-string`**. It compresses your string into a much smaller, URL-safe format.
-
-**How to do it:**
-*   Install it: `npm install lz-string`
-*   When generating the link, compress the data:
-```javascript
-import LZString from 'lz-string';
-
-const state = { your: "massive data here" };
-const compressed = LZString.compressToEncodedURIComponent(JSON.stringify(state));
-const shareLink = `[https://your-app.com/?data=$](https://your-app.com/?data=$){compressed}`;
+    </script>
+</body>
+</html>
