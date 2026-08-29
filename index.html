@@ -714,7 +714,9 @@
             'https://www.myinstants.com/media/sounds/spongebob-fail-sound-effect.mp3',
             'https://www.myinstants.com/media/sounds/metal-pipe-clang.mp3',
             'https://www.myinstants.com/media/sounds/taco-bell-bong-sfx.mp3',
-            'https://www.myinstants.com/media/sounds/emotional-damage.mp3'
+            'https://www.myinstants.com/media/sounds/emotional-damage.mp3',
+            'https://www.myinstants.com/media/sounds/miku-miku-beam.mp3',
+            'https://www.myinstants.com/media/sounds/fahh.mp3'
         ];
 
         // URL CHECKER FOR SHORT SHARED LINK
@@ -863,7 +865,6 @@
             }
         });
 
-
         // ==========================================
         // AUTH & CUSTOM AUDIO INITIALIZATION
         // ==========================================
@@ -916,17 +917,22 @@
                 }
             }
 
+            // Pre-load audio to unlock browser autoplay restrictions
+            const audioAdmin = new Audio('jarvis-admin.mp3');
+            const audioUser = new Audio('jarvis-user.mp3');
+            const audioOffline = new Audio('jarvis-offline.mp3');
+
             document.getElementById('btnOfflineMode').addEventListener('click', () => {
                 playBootChime();
-                
-                // Plays custom offline MP3 if you put jarvis-offline.mp3 in your folder
-                const customOfflineVoice = new Audio('./jarvis-offline.mp3');
-                customOfflineVoice.play().catch(e => console.log("Audio block:", e));
-                
+                audioOffline.play().catch(e => console.log("Audio block:", e));
                 openApp('offline');
             });
 
             document.getElementById('btnMainGoogleLogin').addEventListener('click', () => {
+                // Silently load the files on the exact millisecond of the click to unlock them
+                audioAdmin.load();
+                audioUser.load();
+
                 if(isFirebaseConfigured) {
                     const provider = new GoogleAuthProvider();
                     signInWithPopup(auth, provider).then((result) => {
@@ -939,16 +945,12 @@
                             if (isAdmin) {
                                 showToast("SYSTEM ACTIVATING... DATABASE LOADING... FUTURE TASKS PROCESSING...");
                                 setTimeout(() => {
-                                    // Plays custom admin MP3 if you put jarvis-admin.mp3 in your folder
-                                    const customAdminVoice = new Audio('./jarvis-admin.mp3');
-                                    customAdminVoice.play().catch(e => console.log("Audio block:", e));
+                                    audioAdmin.play().catch(e => console.log("Audio block:", e));
                                 }, 600);
                             } else {
                                 showToast("SYSTEM ACTIVATED. DATABASE LOADING.");
                                 setTimeout(() => {
-                                    // Plays custom user MP3 if you put jarvis-user.mp3 in your folder
-                                    const customUserVoice = new Audio('./jarvis-user.mp3');
-                                    customUserVoice.play().catch(e => console.log("Audio block:", e));
+                                    audioUser.play().catch(e => console.log("Audio block:", e));
                                 }, 600);
                             }
                             sessionStorage.setItem('system_booted', 'true');
