@@ -4,14 +4,14 @@
   "display": "fullscreen",
   "name": "Relent Tracker",
   "orientation": "any",
-  "scope": "/",
+  "scope": "./",
   "short_name": "RTracker",
-  "start_url": "/",
+  "start_url": "./",
   "theme_color": "#ffffff",
-  icons": [
-  { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-  { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
-  ]
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
   "id": "relent_tracker_app",
   "description": "Relent Tracker helps you stay ahead of every exam - track dates, syllabus and marks in one place, with a calendar, to-do list and countdowns so you always know what's coming next.",
   "lang": "en",
