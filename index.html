@@ -2090,6 +2090,7 @@
                     .slice(0, 30);
                 await setDoc(doc(db, "widget", uid), { exams: exams, updatedAt: new Date().toISOString() });
             } catch (e) { console.warn("Widget mirror skipped", e); }
+            try { if (window.AndroidWidget && window.AndroidWidget.setWidgetUid) window.AndroidWidget.setWidgetUid(uid); } catch (e) {}
         }
 
         async function pullDataFromCloud(uid) {
