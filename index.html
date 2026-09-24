@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="manifest" href="/manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relent Tracker</title>
@@ -90,9 +89,8 @@
         .btn-outline { background: transparent; border-color: var(--border-color); }
         .btn-outline.active { background: rgba(253, 224, 71, 0.1); border-color: var(--accent-primary); color: var(--accent-primary); box-shadow: var(--glow-primary); }
 
-        /* FIXED SETTINGS ICON STYLE (No more glitchy rotation/warp) */
         .icon-btn-settings { background: transparent; border: 1px solid transparent; color: var(--text-muted); border-radius: 0; padding: 0.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); flex-shrink: 0; }
-        .icon-btn-settings:hover { color: var(--accent-primary); }
+        .icon-btn-settings:hover { color: var(--accent-primary); transform: rotate(90deg); }
 
         .form-control { width: 100%; background: #050505; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.8rem; font-family: var(--font-main); font-size: 16px; outline: none; border-radius: var(--radius); transition: var(--transition); }
         .form-control:focus { border-color: var(--accent-primary); box-shadow: inset var(--glow-primary); }
@@ -302,7 +300,7 @@
         .app-footer { text-align: center; padding: 2rem; color: #555; font-size: 0.8rem; font-family: var(--font-mono); letter-spacing: 2px; margin-top: auto; width: 100%; text-transform: uppercase; margin-bottom: 60px; }
 
         /* =========================================================
-           MOBILE / ANDROID OPTIMIZATIONS (Fixed Month View Breakage)
+           MOBILE / ANDROID OPTIMIZATIONS
            ========================================================= */
         .hide-mobile { display: inline; }
         
@@ -333,32 +331,9 @@
             
             .pomo-timer { font-size: 20vw; } 
             .pomo-controls .btn { width: 100%; flex: 1 1 100%; }
-            
-            /* MOBILE MONTH VIEW FIX: Compact grid, constrained cell sizing, safe text wrap */
-            .cal-grid.view-month { gap: 2px; }
-            .cal-grid.view-month .cal-cell { 
-                min-height: 65px; 
-                max-height: 85px; 
-                padding: 4px; 
-                overflow: hidden; 
-            }
-            .cal-grid.view-month .cal-date-num { 
-                font-size: 0.75rem; 
-                margin-bottom: 2px; 
-            }
-            .cal-grid.view-month .cal-event { 
-                font-size: 0.55rem; 
-                padding: 2px 3px; 
-                margin-bottom: 2px; 
-                white-space: nowrap; 
-                overflow: hidden; 
-                text-overflow: ellipsis; 
-            }
-            .cal-grid.view-month .cal-event-time, 
-            .cal-grid.view-month .cal-event-desc { 
-                display: none; 
-            }
-            
+            .cal-grid { gap: 5px; }
+            .cal-cell { padding: 5px; min-height: 80px;}
+            .cal-event { font-size: 0.6rem; }
             .cal-view-toggles { width: 100%; justify-content: space-between; }
             .cal-grid.view-week { grid-template-columns: 1fr; }
             #calHeaderGrid.view-week { display: none; }
@@ -393,7 +368,7 @@
                         <span class="hide-mobile">Add Data</span>
                     </button>
                     <button class="icon-btn-settings" id="btnGlobalSettings" title="Workspace Settings">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0l2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                     </button>
                     
                     <div id="navProfileArea" class="user-profile-container"></div>
@@ -525,7 +500,7 @@
             <div style="display: flex; justify-content: center;">
                 <div class="pomo-card card-panel">
                     <button id="btnPomoSettingsToggle" title="Adjust Protocols">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0l2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                     </button>
                     <div class="pomo-modes">
                         <button class="pomo-mode-btn active" data-mode="focus">Focus</button>
@@ -739,7 +714,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const ADMIN_EMAILS = ["dropadvaay@gmail.com", "advaay1981@gmail.com"];
@@ -883,7 +858,7 @@
             try {
                 stopCurrentAudio();
                 if (persona === 'miku' || persona === 'teto' || persona === 'ben10' || persona === 'pikachu') {
-                    currentPersonaAudio = new Audio(`./${persona}-voice.mp3`);
+                    currentPersonaAudio = new Audio(`./assets/audio/${persona}-voice.mp3`);
                     currentPersonaAudio.play().catch(e => console.log("Missing voice file:", e));
                 }
             } catch(e) {}
@@ -899,8 +874,8 @@
             }
             if (type === 'success') {
                 stopCurrentAudio();
-                if (activePersona === 'miku') currentPersonaAudio = new Audio('./miku-track.mp3'); 
-                else if (activePersona === 'teto') currentPersonaAudio = new Audio('./teto-track.mp3'); 
+                if (activePersona === 'miku') currentPersonaAudio = new Audio('./assets/audio/miku-track.mp3'); 
+                else if (activePersona === 'teto') currentPersonaAudio = new Audio('./assets/audio/teto-track.mp3'); 
                 else if (activePersona === 'ben10') { playArpeggio('triangle', [523.25, 783.99, 1046.50, 1318.51]); return; }
                 else if (activePersona === 'pikachu') { playArpeggio('sine', [659.25, 880, 1046.50, 1318.51]); return; }
                 else { playSuccessChime(); return; }
@@ -970,22 +945,22 @@
 
             if (activePersona === 'miku') {
                 prefix = "39_"; viewTitleText = "> MIKU MIKU BEAM";
-                chibiHtml = `<img src="Teto_and_Miku_Metadinha__-removebg-preview.jpg" class="chibi-icon miku-chibi" />`;
+                chibiHtml = `<img src="./assets/images/Teto_and_Miku_Metadinha__-removebg-preview.jpg" class="chibi-icon miku-chibi" />`;
                 const mikuQuotes = ["Hiding in my WiFi?", "Ready to sequence some beats?", "Is that a leek in your pocket?", "World is mine, but the tasks are yours.", "SEKAI DE ICHIBAN OHIME SAMA!"];
                 greeting = mikuQuotes[Math.floor(Math.random() * mikuQuotes.length)];
             } else if (activePersona === 'teto') {
                 prefix = "0401_"; viewTitleText = "> CHIMERA BREAD PROTOCOL";
-                chibiHtml = `<img src="Teto_and_Miku_Metadinha____1_-removebg-preview.jpg" class="chibi-icon teto-chibi" />`;
+                chibiHtml = `<img src="./assets/images/Teto_and_Miku_Metadinha____1_-removebg-preview.jpg" class="chibi-icon teto-chibi" />`;
                 const tetoQuotes = ["Teto why u here?", "Did you bring the French bread?", "You're actually working? It's a miracle!", "Don't ignore me! Baka!", "Chimera protocol engaged."];
                 greeting = tetoQuotes[Math.floor(Math.random() * tetoQuotes.length)];
             } else if (activePersona === 'ben10') {
                 prefix = "10_"; viewTitleText = "> IT'S HERO TIME / OMNITRIX OVERRIDE";
-                chibiHtml = `<img src="47498971066474798-removebg-preview.png" class="chibi-icon ben10-chibi" />`;
+                chibiHtml = `<img src="./assets/images/47498971066474798-removebg-preview.png" class="chibi-icon ben10-chibi" />`;
                 const benQuotes = ["It's hero time!", "Omnitrix charged, let's crush these tasks.", "Even Four Arms couldn't lift this backlog.", "Smackdown time on these deadlines.", "No time to snooze, Tennyson!"];
                 greeting = benQuotes[Math.floor(Math.random() * benQuotes.length)];
             } else if (activePersona === 'pikachu') {
                 prefix = "PKA_"; viewTitleText = "> THUNDERBOLT TASK FORCE";
-                chibiHtml = `<img src="1150317929849440890-removebg-preview.jpg" class="chibi-icon pika-chibi" />`;
+                chibiHtml = `<img src="./assets/images/1150317929849440890-removebg-preview.jpg" class="chibi-icon pika-chibi" />`;
                 const pikaQuotes = ["Pika pika! Ready to shock the system?", "Got my red cap on, let's hunt some bugs.", "Thunderbolt ready for these deadlines!", "Pika... CHU! There goes another task.", "Volt Tackle through this backlog!"];
                 greeting = pikaQuotes[Math.floor(Math.random() * pikaQuotes.length)];
             } else {
@@ -2120,22 +2095,16 @@
         }
 
         document.getElementById('btnOfflineMode').addEventListener('click', () => {
-            const audioOffline = new Audio('jarvis-offline.mp3'); audioOffline.load(); playBootChime(); 
+            const audioOffline = new Audio('./assets/audio/jarvis-offline.mp3'); audioOffline.load(); playBootChime(); 
             audioOffline.play().catch(e => console.log("Audio block:", e)); openApp('offline');
         });
 
-        document.getElementById('btnMainGoogleLogin').addEventListener('click', () => {
-            const audioAdmin = new Audio('jarvis-admin.mp3'); const audioUser = new Audio('jarvis-user.mp3');
-            audioAdmin.load(); audioUser.load();
+        // ---- Google login: popup in browsers, redirect inside the Android app (WebView can't open popups) ----
+        const IS_ANDROID_APP = /StudyDashApp|; wv\)/.test(navigator.userAgent);
 
-            if(isFirebaseConfigured && auth) {
-                const provider = new GoogleAuthProvider();
-                provider.addScope('https://www.googleapis.com/auth/calendar.events');
-                provider.addScope('https://www.googleapis.com/auth/calendar.readonly');
-
-                signInWithPopup(auth, provider).then((result) => {
+        function handleGoogleSignInResult(result, audioAdmin, audioUser) {
                     const credential = GoogleAuthProvider.credentialFromResult(result);
-                    const googleToken = credential.accessToken;
+                    const googleToken = credential ? credential.accessToken : null;
                     if(googleToken) sessionStorage.setItem('gcal_token', googleToken);
 
                     const user = result.user;
@@ -2146,13 +2115,44 @@
                         else { showToast("SYSTEM ACTIVATED. DATABASE LOADING."); setTimeout(() => { audioUser.play().catch(e => console.log(e)); }, 600); }
                         sessionStorage.setItem('system_booted', 'true');
                     }
-                }).catch(err => { showToast(`Auth failed: ${err.message}`); });
+        }
+
+        document.getElementById('btnMainGoogleLogin').addEventListener('click', () => {
+            const audioAdmin = new Audio('./assets/audio/jarvis-admin.mp3'); const audioUser = new Audio('./assets/audio/jarvis-user.mp3');
+            audioAdmin.load(); audioUser.load();
+
+            if(isFirebaseConfigured && auth) {
+                const provider = new GoogleAuthProvider();
+                provider.addScope('https://www.googleapis.com/auth/calendar.events');
+                provider.addScope('https://www.googleapis.com/auth/calendar.readonly');
+
+                if (IS_ANDROID_APP) {
+                    signInWithRedirect(auth, provider).catch(err => { showToast(`Auth failed: ${err.message}`); });
+                } else {
+                    signInWithPopup(auth, provider).then((result) => {
+                        handleGoogleSignInResult(result, audioAdmin, audioUser);
+                    }).catch(err => {
+                        if (err && ['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment'].includes(err.code)) {
+                            signInWithRedirect(auth, provider).catch(e => { showToast(`Auth failed: ${e.message}`); });
+                        } else {
+                            showToast(`Auth failed: ${err.message}`);
+                        }
+                    });
+                }
             } else {
                 showToast("API keys missing or DB failed. Engaging offline mode."); setTimeout(() => openApp('offline'), 2000);
             }
         });
 
         if(isFirebaseConfigured && auth) {
+            // Finish a redirect login (Android app) when the page loads back
+            getRedirectResult(auth).then((result) => {
+                if (!result) return;
+                const audioAdmin = new Audio('./assets/audio/jarvis-admin.mp3'); const audioUser = new Audio('./assets/audio/jarvis-user.mp3');
+                audioAdmin.load(); audioUser.load();
+                handleGoogleSignInResult(result, audioAdmin, audioUser);
+            }).catch(err => { showToast(`Auth failed: ${err.message}`); });
+
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
                     currentUser = user; localStorage.removeItem('offline_mode');
