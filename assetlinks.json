@@ -1,8 +1,0 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "app.vercel.study_dashboard_rose_psi.twa",
-        "sha256_cert_fingerprints": ["64:24:A5:E4:45:F0:31:4E:B8:63:46:CD:C0:5B:88:3C:ED:18:D9:06:D1:85:D5:B8:33:8A:71:55:A8:03:B1:8F"]
-      }
-    }]
