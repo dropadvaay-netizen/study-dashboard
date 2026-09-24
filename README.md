@@ -1,124 +1,194 @@
-<p align="center">
-  <strong>A personal study dashboard built to keep studying, productivity, and useful tools in one place.</strong>
-</p>
+<div align="center">
 
-<p align="center">
-  <a href="https://study-dashboard-rose-psi.vercel.app">
-    <img src="https://img.shields.io/badge/Live%20Demo-Open%20Project-000000?style=for-the-badge&logo=vercel" alt="Live Demo">
-  </a>
-  <img src="https://img.shields.io/badge/HTML-99.9%25-orange?style=for-the-badge&logo=html5" alt="HTML">
-  <img src="https://img.shields.io/badge/JavaScript-0.1%25-yellow?style=for-the-badge&logo=javascript" alt="JavaScript">
-</p>
+📚 STUDY DASHBOARD
 
-✨ About
+A personal command center for studying, productivity & everyday chaos.
 
-Study Dashboard is a lightweight web project designed around a simple idea:
+<br>
 
-Make studying easier by putting useful things in one dashboard.
+<a href="https://study-dashboard-rose-psi.vercel.app">
+  <img src="https://img.shields.io/badge/🚀%20LIVE%20DEMO-ENTER%20DASHBOARD-8b5cf6?style=for-the-badge" alt="Live Demo">
+</a>
+<a href="https://github.com/dropadvaay-netizen/study-dashboard">
+  <img src="https://img.shields.io/github/last-commit/dropadvaay-netizen/study-dashboard?style=for-the-badge&label=LAST%20UPDATE&color=111827" alt="Last Commit">
+</a>
+<img src="https://img.shields.io/badge/STATUS-ACTIVE-22c55e?style=for-the-badge" alt="Status">
 
-The project is built as a web app and includes support for a web app manifest, service worker functionality, and custom audio/voice assets.
+<br><br>
 
-🚀 Live Demo
+HTML · JavaScript · PWA · Vercel
 
-🌐 Open Study Dashboard
+</div>
 
-🧩 What's Inside
+🧠 What is this?
 
-📊 A study-focused dashboard interface
+Study Dashboard is a personal web app built around one idea:
 
-📱 Progressive Web App setup with manifest.json
+Put the useful stuff in one place, make it feel good to use, and keep improving it.
 
-⚡ Service worker support through sw.js
+Instead of building a generic productivity template, this project is treated like a constantly evolving personal workspace — with custom UI, app-style behaviour, PWA support, and a collection of custom audio/voice assets.
 
-🔊 Custom voice/audio assets
+It's small enough to experiment with and flexible enough to keep growing.
 
-🎨 Custom icons and visual assets
+✨ Highlights
 
-🌐 Static web deployment through Vercel
+<table>
+<tr>
+<td width="50%">
 
-🛠️ Tech Stack
+📖 Study-first
+
+A dashboard designed around the everyday student workflow.
+
+</td>
+<td width="50%">
+
+📱 App-like
+
+Built with PWA pieces so the website can behave more like an installed app on supported devices.
+
+</td>
+</tr>
+<tr>
+<td>
+
+🔊 Custom Voice System
+
+Includes a collection of character-inspired voice/audio assets for a more interactive experience.
+
+</td>
+<td>
+
+⚡ Lightweight
+
+Built primarily with HTML and JavaScript, keeping the project straightforward and easy to iterate on.
+
+</td>
+</tr>
+</table>
+
+🎧 Voice & Audio
+
+One of the fun parts of the project is its custom audio collection.
+
+Current assets include voices inspired by:
+
+JARVIS · TETO · MIKU · PIKACHU · BEN 10
+
+These files are part of the dashboard's audio/voice experience.
+
+Note: The repository contains the audio assets themselves; the exact way each sound is used can evolve as the project changes.
+
+📱 Progressive Web App
+
+The project includes the core files needed for a Progressive Web App:
+
+manifest.json
+sw.js
+icon-192.png
+icon-512.png
+
+That gives the project a more app-like foundation and leaves room for offline behaviour, installation, caching, and other PWA improvements.
+
+🛠️ Built With
+
+<div align="center">
 
 Technology
 
-Purpose
+Role
 
-HTML
+🧱 HTML5
 
-Application structure
+Structure & UI
 
-JavaScript
+⚡ JavaScript
 
-Interactivity and app logic
+Interactions & logic
 
-PWA
+📱 PWA APIs
 
-Installable/offline-capable web app features
+Installable / app-like behaviour
 
-Vercel
+▲ Vercel
 
 Deployment
 
-📁 Project Structure
+</div>
+
+📂 Repository
 
 study-dashboard/
-├── assets/
-│   ├── audio/
-│   ├── images/
-│   └── icons/
-├── js/
-│   └── sw.js
-├── index.html
-├── manifest.json
-└── README.md
+│
+├── 🎵 audio / voice assets
+├── 🖼️ image & visual assets
+├── 📱 PWA icons
+├── ⚙️ sw.js
+├── 🧾 manifest.json
+├── 🌐 index.html
+└── 📖 README.md
 
-The exact folder structure may evolve as the project grows.
+The repository is intentionally simple so new experiments and features can be added without a complicated build setup.
 
-🔊 Audio Assets
+🌐 Try It
 
-The project currently includes custom audio/voice files for different experiences, including:
+↗ Open the live dashboard
 
-Jarvis voices
+No setup. No build command. Just open it.
 
-Teto voice
+🗺️ What's Next?
 
-Miku voice
+This project is meant to keep evolving.
 
-Pikachu voice
+Possible directions include:
 
-Ben 10 voice
+More study utilities
 
-These assets are used as part of the project's audio/voice system.
+Better dashboard customization
 
-📱 PWA
+More polished mobile experience
 
-The project includes the basic building blocks for a Progressive Web App:
+Expanded voice interactions
 
-manifest.json
+More PWA functionality
 
-Service worker (sw.js)
+UI/UX improvements
 
-App icons (icon-192.png, icon-512.png)
+Additional productivity features
 
-This allows the project to behave more like an installable web application on supported devices.
+This roadmap is intentionally flexible — this project is also a playground for trying new ideas.
 
-🧑‍💻 Author
+🧑‍💻 About the Builder
+
+<div align="center">
 
 Mannan
 
-Student • Developer • Tech Enthusiast
+Student · Developer · Tech Enthusiast
 
-I enjoy building projects around technology, web development, AI, gaming, and music.
+Tech. Old tech. New tech. Gaming. Music. Building random ideas at unreasonable hours.
+
+</div>
 
 📌 Project Status
 
-🚧 Active project — continuously improving
+🟢 Active
 
-New features, UI changes, and experiments may be added over time.
+The dashboard is still being worked on, refined, and experimented with.
+Expect the UI, features, and structure to change over time.
 
-⭐ Support
+<div align="center">
 
-If you found the project interesting, consider giving the repository a ⭐ Star.
+⭐ Like the project?
 
-<p align="center">
-  Made with ❤️ by <strong>Mannan</strong>
-</p>
+Give the repository a star if you find it useful or just think it's cool.
+
+<br>
+
+Made with curiosity, caffeine & too many ideas.
+
+<br>
+
+© Mannan
+
+</div>
