@@ -5,17 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relent Tracker</title>
     
-    <!-- Clean Terminal Logo/Favicon generated natively -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='15' fill='%230a0a0c'/><text x='15' y='65' font-family='monospace' font-size='50' fill='%2322d3ee' font-weight='bold'>&gt;_</text></svg>">
-    
-    <!-- Cyberpunk / Terminal Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
         /* =========================================================
-           CYBERPUNK / TERMINAL CORE THEME (PERFORMANCE OPTIMIZED)
+           CYBERPUNK / TERMINAL CORE THEME
            ========================================================= */
         :root {
             --bg-color: #050505;
@@ -46,36 +43,11 @@
         body.theme-matrix { --accent-primary: #22c55e; --accent-secondary: #4ade80; --glow-primary: 0 0 12px rgba(34, 197, 94, 0.25); --glow-secondary: 0 0 12px rgba(74, 222, 128, 0.25); }
         body.theme-netrunner { --accent-primary: #f97316; --accent-secondary: #f43f5e; --glow-primary: 0 0 12px rgba(249, 115, 22, 0.25); --glow-secondary: 0 0 12px rgba(244, 63, 94, 0.25); }
 
-        /* =========================================================
-           SECRET PERSONA THEMES (TOTAL HIJACK)
-           ========================================================= */
-        body.theme-miku { 
-            --accent-primary: #39c5bb; --accent-secondary: #f472b6; 
-            --glow-primary: 0 0 15px rgba(57, 197, 187, 0.4); --glow-secondary: 0 0 15px rgba(244, 114, 182, 0.4); 
-            text-shadow: 0 0 2px rgba(57, 197, 187, 0.3);
-        }
-        body.theme-miku .grid-bg { background-image: radial-gradient(rgba(57, 197, 187, 0.15) 1px, transparent 1px); }
+        body.theme-miku { --accent-primary: #39c5bb; --accent-secondary: #f472b6; --glow-primary: 0 0 15px rgba(57, 197, 187, 0.4); --glow-secondary: 0 0 15px rgba(244, 114, 182, 0.4); text-shadow: 0 0 2px rgba(57, 197, 187, 0.3); }
+        body.theme-teto { --accent-primary: #ff3366; --accent-secondary: #a855f7; --glow-primary: 0 0 15px rgba(255, 51, 102, 0.4); --glow-secondary: 0 0 15px rgba(168, 85, 247, 0.4); }
+        body.theme-ben10 { --accent-primary: #22c55e; --accent-secondary: #10b981; --glow-primary: 0 0 15px rgba(34, 197, 94, 0.5); --glow-secondary: 0 0 15px rgba(16, 185, 129, 0.5); }
+        body.theme-pikachu { --accent-primary: #facc15; --accent-secondary: #fef08a; --glow-primary: 0 0 20px rgba(250, 204, 21, 0.6); --glow-secondary: 0 0 15px rgba(254, 240, 138, 0.5); }
 
-        body.theme-teto { 
-            --accent-primary: #ff3366; --accent-secondary: #a855f7; 
-            --glow-primary: 0 0 15px rgba(255, 51, 102, 0.4); --glow-secondary: 0 0 15px rgba(168, 85, 247, 0.4); 
-        }
-        body.theme-teto .grid-bg { background-image: radial-gradient(rgba(255, 51, 102, 0.1) 1px, transparent 1px); }
-        body.theme-teto .card-panel, body.theme-teto .exam-card, body.theme-teto .simple-task-item { border: 1px dashed var(--accent-primary); box-shadow: 4px 4px 0px rgba(255, 51, 102, 0.15); }
-
-        body.theme-ben10 {
-            --accent-primary: #22c55e; --accent-secondary: #10b981;
-            --glow-primary: 0 0 15px rgba(34, 197, 94, 0.5); --glow-secondary: 0 0 15px rgba(16, 185, 129, 0.5);
-        }
-        body.theme-ben10 .grid-bg { background-image: radial-gradient(rgba(34, 197, 94, 0.1) 1px, transparent 1px); }
-
-        body.theme-pikachu {
-            --accent-primary: #facc15; --accent-secondary: #fef08a;
-            --glow-primary: 0 0 20px rgba(250, 204, 21, 0.6); --glow-secondary: 0 0 15px rgba(254, 240, 138, 0.5);
-        }
-        body.theme-pikachu .grid-bg { background-image: radial-gradient(rgba(250, 204, 21, 0.15) 1px, transparent 1px); }
-
-        /* Larger Character Art */
         .chibi-icon { display: none; height: 115px; width: auto; vertical-align: middle; margin-left: 15px; filter: drop-shadow(0 0 12px currentColor); }
         body.theme-miku .chibi-icon.miku-chibi { display: inline-block; color: var(--accent-primary); }
         body.theme-teto .chibi-icon.teto-chibi { display: inline-block; color: var(--accent-primary); }
@@ -89,7 +61,6 @@
             color: var(--text-main); font-family: var(--font-main); font-size: 1.05rem; overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column; 
         }
 
-        /* Highly Optimized Subdued Dot Background (Zero Paint Lag) */
         .grid-bg {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
             background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
@@ -106,9 +77,6 @@
 
         .hidden-section { display: none !important; }
 
-        /* =========================================================
-           TUITION TEACHER MODE (READ-ONLY OVERRIDES)
-           ========================================================= */
         body.teacher-mode-active .edit-btn,
         body.teacher-mode-active .delete-btn,
         body.teacher-mode-active .delete-simple-btn,
@@ -120,21 +88,10 @@
         body.teacher-mode-active .topic-item input[type="checkbox"],
         body.teacher-mode-active .simple-task-item input[type="checkbox"] { cursor: not-allowed; }
         body.teacher-mode-active #dynamicGreetingText::after {
-            content: " [ OBSERVER MODE ]";
-            color: var(--accent-danger);
-            font-size: 1rem;
-            margin-left: 10px;
-            text-shadow: var(--glow-danger);
-            font-family: var(--font-mono);
+            content: " [ OBSERVER MODE ]"; color: var(--accent-danger); font-size: 1rem; margin-left: 10px; text-shadow: var(--glow-danger); font-family: var(--font-mono);
         }
 
-        /* =========================================================
-           UI COMPONENTS & BUTTONS (CLICK BUG FIXES)
-           ========================================================= */
-        /* Critical fix: Prevents SVGs from stealing click events */
         .btn svg, .icon-btn svg, .taskbar-btn svg, .icon-btn-settings svg { pointer-events: none; }
-        
-        /* Stop accidental highlighting when rapid clicking */
         .btn, .icon-btn, .taskbar-btn, .cal-cell, .hour-row { user-select: none; }
 
         .btn {
@@ -161,18 +118,8 @@
         .form-control { width: 100%; background: #050505; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.8rem; font-family: var(--font-main); font-size: 16px; outline: none; border-radius: var(--radius); transition: var(--transition); }
         .form-control:focus { border-color: var(--accent-primary); box-shadow: inset var(--glow-primary); }
         
-        .card-panel { 
-            background: var(--surface-color); 
-            border: 1px solid var(--border-color); 
-            padding: 1.5rem; 
-            position: relative; 
-            border-radius: var(--radius); 
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        }
+        .card-panel { background: var(--surface-color); border: 1px solid var(--border-color); padding: 1.5rem; position: relative; border-radius: var(--radius); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); }
 
-        /* =========================================================
-           AUTH GATEKEEPER
-           ========================================================= */
         #authScreen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #050505; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: var(--transition); }
         #authScreen.hidden { opacity: 0; pointer-events: none; }
         .auth-card { max-width: 450px; width: 90%; text-align: center; }
@@ -180,17 +127,9 @@
         .auth-card p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 2rem; }
         .engineered-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 2rem; letter-spacing: 2px; }
         
-        .advaay-glow { 
-            color: #ff00ff; text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff; 
-            font-family: var(--font-display); font-size: 1.1rem; font-weight: bold; 
-            animation: pulse-glow 2s infinite alternate;
-        }
-        @keyframes pulse-glow {
-            from { text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff; }
-            to { text-shadow: 0 0 15px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff; color: #ff88ff; }
-        }
+        .advaay-glow { color: #ff00ff; text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff; font-family: var(--font-display); font-size: 1.1rem; font-weight: bold; animation: pulse-glow 2s infinite alternate; }
+        @keyframes pulse-glow { from { text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff; } to { text-shadow: 0 0 15px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff; color: #ff88ff; } }
 
-        /* App Container & Nav */
         #appContainer { opacity: 0; transition: opacity 0.5s ease; pointer-events: none; flex: 1; display: flex; flex-direction: column; width: 100%; }
         #appContainer.visible { opacity: 1; pointer-events: all; }
         
@@ -205,53 +144,31 @@
         .logout-text { font-size: 0.75rem; color: var(--accent-danger); cursor: pointer; display: none; font-weight: bold; text-transform: uppercase; }
         .user-profile-container:hover .logout-text { display: block; }
 
-        /* =========================================================
-           SIDE TASKBAR
-           ========================================================= */
-        .side-taskbar {
-            position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
-            display: flex; flex-direction: column; gap: 15px; z-index: 999;
-        }
-        .taskbar-btn {
-            width: 50px; height: 50px; background: var(--surface-color);
-            border: 1px solid var(--border-color); border-radius: var(--radius); color: var(--text-muted); display: flex;
-            align-items: center; justify-content: center; cursor: pointer; transition: var(--transition);
-            font-size: 1.2rem; position: relative; flex-shrink: 0;
-        }
+        .side-taskbar { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 15px; z-index: 999; }
+        .taskbar-btn { width: 50px; height: 50px; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius); color: var(--text-muted); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); font-size: 1.2rem; position: relative; flex-shrink: 0; }
         .taskbar-btn:hover { background: var(--surface-hover); color: var(--text-main); border-color: #555; transform: scale(1.05); }
         .taskbar-btn.active { border-color: var(--accent-primary); color: var(--accent-primary); box-shadow: var(--glow-primary); background: rgba(253, 224, 71, 0.1); }
-
-        .taskbar-btn::after {
-            content: attr(data-tooltip); position: absolute; right: 65px; background: #050505;
-            border: 1px solid var(--accent-primary); border-radius: 4px; color: var(--accent-primary); padding: 6px 12px;
-            font-family: var(--font-mono); font-size: 0.75rem; font-weight: bold; white-space: nowrap;
-            opacity: 0; pointer-events: none; transform: translateX(10px); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: var(--glow-primary); text-transform: uppercase;
-        }
+        .taskbar-btn::after { content: attr(data-tooltip); position: absolute; right: 65px; background: #050505; border: 1px solid var(--accent-primary); border-radius: 4px; color: var(--accent-primary); padding: 6px 12px; font-family: var(--font-mono); font-size: 0.75rem; font-weight: bold; white-space: nowrap; opacity: 0; pointer-events: none; transform: translateX(10px); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); box-shadow: var(--glow-primary); text-transform: uppercase; }
         .taskbar-btn:hover::after { opacity: 1; transform: translateX(0); }
 
         .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 2rem; flex: 1; display: flex; flex-direction: column; }
         
-        /* Dashboard Hero */
         .hero-section { margin-bottom: 2.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; }
         .hero-title h2 { font-size: 2.2rem; margin-bottom: 0.5rem; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; text-transform: none; font-family: var(--font-mono); font-weight: 500;}
         .terminal-prefix { color: var(--accent-secondary); margin-right: 5px; font-weight: bold; text-shadow: var(--glow-secondary); transition: var(--transition);}
         .view-title { color: var(--accent-primary); font-family: var(--font-mono); font-size: 1.1rem; margin-top: 10px; font-weight: bold; letter-spacing: 2px; transition: var(--transition);}
 
-        /* NEXT LEDGER BADGE */
         #topNextLedgerDisplay { background: rgba(34, 211, 238, 0.05); border: 1px solid var(--accent-secondary); padding: 0.6rem 1.2rem; border-radius: var(--radius); font-family: var(--font-mono); display: none; box-shadow: var(--glow-secondary); }
         .next-ledger-label { color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
         .next-ledger-content { display: flex; align-items: baseline; gap: 10px; }
         #topNextLedgerName { color: var(--accent-secondary); font-size: 1.2rem; font-weight: bold; }
         #topNextLedgerDays { color: var(--text-main); font-size: 0.85rem; font-weight: bold; }
 
-        /* Stats Grid */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; width: 100%; }
         .stat-card { border-left: 2px solid var(--border-color); padding-left: 1rem; transition: var(--transition); }
         .stat-card.highlight { border-left-color: var(--accent-primary); }
         .stat-title { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; }
         
-        /* Timeline Matrix */
         .timeline { display: flex; flex-direction: column; gap: 2rem; position: relative; padding-bottom: 2rem; padding-left: 40px; margin-top: 1rem;}
         .timeline::before { content: ''; position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: var(--border-color); }
         
@@ -259,12 +176,7 @@
         .empty-state p { color: var(--text-muted); font-size: 0.85rem; font-family: var(--font-mono); }
 
         .exam-card-wrapper { position: relative; z-index: 1; width: 100%; }
-        .timeline-date-marker { 
-            position: absolute; left: -40px; margin-left: 20px; transform: translateX(-50%); top: 10px; 
-            width: 44px; height: 44px; background: var(--surface-color); border: 1px solid var(--accent-secondary); border-radius: var(--radius);
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            z-index: 2; box-shadow: inset 0 0 10px rgba(34, 211, 238, 0.2); transition: var(--transition);
-        }
+        .timeline-date-marker { position: absolute; left: -40px; margin-left: 20px; transform: translateX(-50%); top: 10px; width: 44px; height: 44px; background: var(--surface-color); border: 1px solid var(--accent-secondary); border-radius: var(--radius); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; box-shadow: inset 0 0 10px rgba(34, 211, 238, 0.2); transition: var(--transition); }
         .timeline-date-marker span:first-child { font-size: 1.1rem; font-weight: 700; line-height: 1; font-family: var(--font-mono); color: var(--text-main); }
         .timeline-date-marker span:last-child { font-size: 0.6rem; color: var(--accent-secondary); text-transform: uppercase; margin-top: 2px; font-family: var(--font-mono); font-weight: bold; }
         
@@ -281,7 +193,6 @@
         .icon-btn:hover { color: var(--text-main); }
         .icon-btn.delete-btn:hover { color: var(--accent-danger); }
         .icon-btn.edit-btn:hover { color: var(--accent-secondary); }
-        
         .expand-icon { transition: transform 0.3s ease; color: var(--text-muted); }
         .exam-card.expanded .expand-icon { transform: rotate(180deg); color: var(--accent-primary); }
 
@@ -340,7 +251,7 @@
             color: var(--text-main); 
             font-family: var(--font-main); 
             text-align: left; 
-            white-space: normal; /* Fixes overlap by wrapping text */
+            white-space: normal; 
             word-wrap: break-word; 
             overflow-wrap: break-word;
             line-height: 1.2;
@@ -370,7 +281,7 @@
         .simple-task-item.completed span { color: var(--text-muted); text-decoration: line-through; opacity: 0.5; }
         
         /* =========================================================
-           POMODORO SECTION (OPTIMIZED SIZE)
+           POMODORO SECTION
            ========================================================= */
         #pomodoroSection { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh; gap: 2rem; padding-bottom: 4rem;} 
         .pomo-card { max-width: 500px; width: 100%; text-align: center; padding: 3rem 2rem 2rem 2rem; } 
@@ -450,13 +361,10 @@
             .cal-cell { padding: 5px; min-height: 80px;}
             .cal-event { font-size: 0.6rem; }
             .cal-view-toggles { width: 100%; justify-content: space-between; }
-
-            /* Mobile Week View Transformation */
             .cal-grid.view-week { grid-template-columns: 1fr; }
             #calHeaderGrid.view-week { display: none; }
             .mobile-day-header { display: block; }
             .cal-grid.view-week .cal-cell { min-height: 120px; }
-
             .day-time-label { width: 50px; padding-right: 10px; font-size: 0.7rem; }
             .day-events-area { padding-left: 10px; }
         }
@@ -863,7 +771,7 @@
         }
 
         // ==========================================
-        // DATA SAFE PARSER (PREVENTS FATAL CRASHES)
+        // DATA SAFE PARSER
         // ==========================================
         function safeParse(key, fallback) {
             try {
@@ -1452,7 +1360,7 @@
         });
 
         // ==========================================
-        // SMART CALENDAR ENGINE
+        // SMART CALENDAR ENGINE (MULTI-CALENDAR SYNC)
         // ==========================================
         let currentCalDate = new Date();
         let currentCalView = 'month'; 
@@ -1660,7 +1568,7 @@
                 if (ev) {
                     document.getElementById('calEventId').value = ev.id;
                     document.getElementById('calEventGcalId').value = ev.gcalId || '';
-                    document.getElementById('calEventTitle').value = ev.title;
+                    document.getElementById('calEventTitle').value = ev.title.replace(/^\[.*?\]\s*/, ''); // Remove calendar tag for editing
                     document.getElementById('calEventDesc').value = ev.description || '';
                     document.getElementById('calEventDate').value = ev.date;
                     
@@ -1750,10 +1658,15 @@
                         payload.end = { dateTime: endDateTime };
                     }
 
+                    let targetCalendarId = 'primary';
                     let url = 'https://www.googleapis.com/calendar/v3/calendars/primary/events';
                     let method = 'POST';
                     if (gcalId) {
-                        url += `/${gcalId}`;
+                        const existingEv = calendarEvents.find(ev => ev.gcalId === gcalId);
+                        if (existingEv && existingEv.calendarId) {
+                            targetCalendarId = encodeURIComponent(existingEv.calendarId);
+                        }
+                        url = `https://www.googleapis.com/calendar/v3/calendars/${targetCalendarId}/events/${gcalId}`;
                         method = 'PUT';
                     }
 
@@ -1769,7 +1682,7 @@
                 }
             }
 
-            const evObj = { id: id || `cal-${Date.now()}`, title, description, date, allDay, startTime, endTime, gcalId };
+            const evObj = { id: id || `cal-${Date.now()}`, title, description, date, allDay, startTime, endTime, gcalId, calendarId: 'primary' };
 
             if (id) {
                 const idx = calendarEvents.findIndex(ev => ev.id === id);
@@ -1793,7 +1706,9 @@
                 const token = sessionStorage.getItem('gcal_token');
                 if (token) {
                     try {
-                        await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${gcalId}`, {
+                        const existingEv = calendarEvents.find(e => e.gcalId === gcalId);
+                        const calId = existingEv && existingEv.calendarId ? encodeURIComponent(existingEv.calendarId) : 'primary';
+                        await fetch(`https://www.googleapis.com/calendar/v3/calendars/${calId}/events/${gcalId}`, {
                             method: 'DELETE',
                             headers: { 'Authorization': `Bearer ${token}` }
                         });
@@ -1809,7 +1724,7 @@
         });
 
         // ==========================================
-        // SMART GOOGLE CALENDAR SYNC (Silent API Polling)
+        // SMART GOOGLE CALENDAR SYNC (MULTI-CALENDAR FETCH)
         // ==========================================
         async function performGCalSync(silent = false) {
             const token = sessionStorage.getItem('gcal_token');
@@ -1818,61 +1733,76 @@
                 return;
             }
             
-            if (!silent) showToast("Syncing with Google Calendar...");
+            if (!silent) showToast("Scanning All Google Calendars...");
             try {
                 const timeMin = new Date(currentCalDate.getFullYear(), currentCalDate.getMonth() - 1, 1).toISOString();
                 const timeMax = new Date(currentCalDate.getFullYear(), currentCalDate.getMonth() + 2, 0).toISOString();
                 
-                const res = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime&maxResults=250`, {
+                // Fetch all calendars the user has access to
+                const calRes = await fetch(`https://www.googleapis.com/calendar/v3/users/me/calendarList`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 
-                if (res.status === 429) {
+                if (calRes.status === 429) {
                     console.warn("GCal Rate Limit Hit. Backing off.");
                     return;
                 }
                 
-                const data = await res.json();
+                const calData = await calRes.json();
                 
-                if (data.items) {
+                if (calData.items) {
                     calendarEvents = calendarEvents.filter(ev => !ev.gcalId);
                     
-                    data.items.forEach(item => {
-                        if (item.start) {
-                            let dateStr = '';
-                            let allDay = true;
-                            let startTime = '';
-                            let endTime = '';
+                    // Loop through every single calendar the user owns/subscribes to
+                    for (const calendar of calData.items) {
+                        const res = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendar.id)}/events?timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime&maxResults=250`, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        });
+                        
+                        const data = await res.json();
+                        
+                        if (data.items) {
+                            data.items.forEach(item => {
+                                if (item.start) {
+                                    let dateStr = '';
+                                    let allDay = true;
+                                    let startTime = '';
+                                    let endTime = '';
 
-                            if (item.start.date) {
-                                dateStr = item.start.date;
-                            } else if (item.start.dateTime) {
-                                allDay = false;
-                                const dtStart = new Date(item.start.dateTime);
-                                dateStr = dtStart.toISOString().split('T')[0];
-                                startTime = dtStart.toTimeString().substring(0, 5);
-                                if(item.end && item.end.dateTime) {
-                                    endTime = new Date(item.end.dateTime).toTimeString().substring(0, 5);
+                                    if (item.start.date) {
+                                        dateStr = item.start.date;
+                                    } else if (item.start.dateTime) {
+                                        allDay = false;
+                                        const dtStart = new Date(item.start.dateTime);
+                                        dateStr = dtStart.toISOString().split('T')[0];
+                                        startTime = dtStart.toTimeString().substring(0, 5);
+                                        if(item.end && item.end.dateTime) {
+                                            endTime = new Date(item.end.dateTime).toTimeString().substring(0, 5);
+                                        }
+                                    }
+                                    
+                                    if (dateStr) {
+                                        // Tag secondary calendars with their name so you know where it came from
+                                        let titlePrefix = calendar.primary ? '' : `[${calendar.summary}] `;
+                                        calendarEvents.push({
+                                            id: `cal-g-${item.id}`,
+                                            gcalId: item.id,
+                                            calendarId: calendar.id,
+                                            title: titlePrefix + (item.summary || 'Busy'),
+                                            description: item.description || '',
+                                            date: dateStr,
+                                            allDay: allDay,
+                                            startTime: startTime,
+                                            endTime: endTime
+                                        });
+                                    }
                                 }
-                            }
-                            
-                            if (dateStr) {
-                                calendarEvents.push({
-                                    id: `cal-g-${item.id}`,
-                                    gcalId: item.id,
-                                    title: item.summary || 'Busy',
-                                    description: item.description || '',
-                                    date: dateStr,
-                                    allDay: allDay,
-                                    startTime: startTime,
-                                    endTime: endTime
-                                });
-                            }
+                            });
                         }
-                    });
+                    }
                     await syncData(true);
                     renderCalendar();
-                    if (!silent) showToast("Google Calendar Synced!");
+                    if (!silent) showToast("All Google Calendars Synced!");
                 }
             } catch (err) {
                 console.error("GCal Fetch Error", err);
@@ -2228,6 +2158,7 @@
             if(isFirebaseConfigured && auth) {
                 const provider = new GoogleAuthProvider();
                 provider.addScope('https://www.googleapis.com/auth/calendar.events');
+                provider.addScope('https://www.googleapis.com/auth/calendar.readonly');
 
                 signInWithPopup(auth, provider).then((result) => {
                     const credential = GoogleAuthProvider.credentialFromResult(result);
