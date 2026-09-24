@@ -89,8 +89,9 @@
         .btn-outline { background: transparent; border-color: var(--border-color); }
         .btn-outline.active { background: rgba(253, 224, 71, 0.1); border-color: var(--accent-primary); color: var(--accent-primary); box-shadow: var(--glow-primary); }
 
+        /* FIXED SETTINGS ICON STYLE (Crisp, clean, no glitchy warp) */
         .icon-btn-settings { background: transparent; border: 1px solid transparent; color: var(--text-muted); border-radius: 0; padding: 0.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); flex-shrink: 0; }
-        .icon-btn-settings:hover { color: var(--accent-primary); transform: rotate(90deg); }
+        .icon-btn-settings:hover { color: var(--accent-primary); }
 
         .form-control { width: 100%; background: #050505; border: 1px solid var(--border-color); color: var(--text-main); padding: 0.8rem; font-family: var(--font-main); font-size: 16px; outline: none; border-radius: var(--radius); transition: var(--transition); }
         .form-control:focus { border-color: var(--accent-primary); box-shadow: inset var(--glow-primary); }
@@ -300,7 +301,7 @@
         .app-footer { text-align: center; padding: 2rem; color: #555; font-size: 0.8rem; font-family: var(--font-mono); letter-spacing: 2px; margin-top: auto; width: 100%; text-transform: uppercase; margin-bottom: 60px; }
 
         /* =========================================================
-           MOBILE / ANDROID OPTIMIZATIONS
+           MOBILE / ANDROID OPTIMIZATIONS (Fixed Month View Breakage)
            ========================================================= */
         .hide-mobile { display: inline; }
         
@@ -331,9 +332,32 @@
             
             .pomo-timer { font-size: 20vw; } 
             .pomo-controls .btn { width: 100%; flex: 1 1 100%; }
-            .cal-grid { gap: 5px; }
-            .cal-cell { padding: 5px; min-height: 80px;}
-            .cal-event { font-size: 0.6rem; }
+            
+            /* MOBILE MONTH VIEW FIX: Compact grid, constrained cell sizing, safe text wrap */
+            .cal-grid.view-month { gap: 2px; }
+            .cal-grid.view-month .cal-cell { 
+                min-height: 65px; 
+                max-height: 85px; 
+                padding: 4px; 
+                overflow: hidden; 
+            }
+            .cal-grid.view-month .cal-date-num { 
+                font-size: 0.75rem; 
+                margin-bottom: 2px; 
+            }
+            .cal-grid.view-month .cal-event { 
+                font-size: 0.55rem; 
+                padding: 2px 3px; 
+                margin-bottom: 2px; 
+                white-space: nowrap; 
+                overflow: hidden; 
+                text-overflow: ellipsis; 
+            }
+            .cal-grid.view-month .cal-event-time, 
+            .cal-grid.view-month .cal-event-desc { 
+                display: none; 
+            }
+            
             .cal-view-toggles { width: 100%; justify-content: space-between; }
             .cal-grid.view-week { grid-template-columns: 1fr; }
             #calHeaderGrid.view-week { display: none; }
@@ -368,7 +392,7 @@
                         <span class="hide-mobile">Add Data</span>
                     </button>
                     <button class="icon-btn-settings" id="btnGlobalSettings" title="Workspace Settings">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0l2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                     </button>
                     
                     <div id="navProfileArea" class="user-profile-container"></div>
@@ -500,7 +524,7 @@
             <div style="display: flex; justify-content: center;">
                 <div class="pomo-card card-panel">
                     <button id="btnPomoSettingsToggle" title="Adjust Protocols">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0l2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                     </button>
                     <div class="pomo-modes">
                         <button class="pomo-mode-btn active" data-mode="focus">Focus</button>
@@ -2099,22 +2123,21 @@
             audioOffline.play().catch(e => console.log("Audio block:", e)); openApp('offline');
         });
 
-        // ---- Google login: popup in browsers, redirect inside the Android app (WebView can't open popups) ----
         const IS_ANDROID_APP = /StudyDashApp|; wv\)/.test(navigator.userAgent);
 
         function handleGoogleSignInResult(result, audioAdmin, audioUser) {
-                    const credential = GoogleAuthProvider.credentialFromResult(result);
-                    const googleToken = credential ? credential.accessToken : null;
-                    if(googleToken) sessionStorage.setItem('gcal_token', googleToken);
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const googleToken = credential ? credential.accessToken : null;
+            if(googleToken) sessionStorage.setItem('gcal_token', googleToken);
 
-                    const user = result.user;
-                    if (!sessionStorage.getItem('system_booted')) {
-                        const isAdmin = user.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
-                        playBootChime(); 
-                        if (isAdmin) { showToast("SYSTEM ACTIVATING... DATABASE LOADING... FUTURE TASKS PROCESSING..."); setTimeout(() => { audioAdmin.play().catch(e => console.log(e)); }, 600); } 
-                        else { showToast("SYSTEM ACTIVATED. DATABASE LOADING."); setTimeout(() => { audioUser.play().catch(e => console.log(e)); }, 600); }
-                        sessionStorage.setItem('system_booted', 'true');
-                    }
+            const user = result.user;
+            if (!sessionStorage.getItem('system_booted')) {
+                const isAdmin = user.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
+                playBootChime(); 
+                if (isAdmin) { showToast("SYSTEM ACTIVATING... DATABASE LOADING... FUTURE TASKS PROCESSING..."); setTimeout(() => { audioAdmin.play().catch(e => console.log(e)); }, 600); } 
+                else { showToast("SYSTEM ACTIVATED. DATABASE LOADING."); setTimeout(() => { audioUser.play().catch(e => console.log(e)); }, 600); }
+                sessionStorage.setItem('system_booted', 'true');
+            }
         }
 
         document.getElementById('btnMainGoogleLogin').addEventListener('click', () => {
@@ -2145,7 +2168,6 @@
         });
 
         if(isFirebaseConfigured && auth) {
-            // Finish a redirect login (Android app) when the page loads back
             getRedirectResult(auth).then((result) => {
                 if (!result) return;
                 const audioAdmin = new Audio('./assets/audio/jarvis-admin.mp3'); const audioUser = new Audio('./assets/audio/jarvis-user.mp3');
